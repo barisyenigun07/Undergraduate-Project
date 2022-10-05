@@ -1,4 +1,6 @@
 import React from "react";
+import './App.css';
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,8 +9,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
+import { styled, alpha } from "@mui/material/styles";
+import InputBase from "@mui/material/InputBase";
+import AppBar2 from "./components/AppBar2";
+import Landing from "./components/Landing";
+
 
 import "./App.css";
 const Search = styled("div")(({ theme }) => ({
@@ -55,34 +60,39 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function App() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            İYTEM'LAK
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <>
+      {/*
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={handleDrawerOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              İYTEM'LAK
+            </Typography>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+            <Button color="inherit">Login</Button>
+          </Toolbar>
+        </AppBar>
+      </Box> */}
+            <Landing></Landing>
+    </>
   );
 }
 
