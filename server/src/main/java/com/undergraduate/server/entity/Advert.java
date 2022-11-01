@@ -7,22 +7,20 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "post")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+@MappedSuperclass
+public abstract class Advert {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
     @Column(name = "title")
     private String title;
-    @Column(name = "content")
-    private String content;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @Column(name = "detail")
+    private String detail;
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }
