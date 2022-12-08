@@ -14,6 +14,9 @@ import bg from "./bg-logo.jpg";
 import { styled } from "@mui/material/styles";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
+import PersonIcon from '@mui/icons-material/Person';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -60,7 +63,7 @@ const Register = () => {
                     color: "#000",
                   }}
                 >
-                  LOGIN
+                  REGISTER
                 </Typography>
                 <br /> <br />
        
@@ -75,7 +78,7 @@ const Register = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon />
+                        <PersonIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -91,7 +94,7 @@ const Register = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon />
+                        <PersonAddAlt1Icon />
                       </InputAdornment>
                     ),
                   }}
@@ -107,7 +110,7 @@ const Register = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon />
+                        <PhoneEnabledIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -210,7 +213,7 @@ const Register = () => {
                     },
                   }}
                 >
-                  Login
+                  Register
                 </Button>
               </Box>
             </Stack>
