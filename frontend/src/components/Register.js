@@ -74,7 +74,7 @@ const Register = () => {
                   label="Name"
                   variant="outlined"
                   size="small"
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -90,7 +90,7 @@ const Register = () => {
                   label="Username"
                   variant="outlined"
                   size="small"
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -106,7 +106,7 @@ const Register = () => {
                   label="Phone Number"
                   variant="outlined"
                   size="small"
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -122,7 +122,7 @@ const Register = () => {
                   label="Email"
                   variant="outlined"
                   size="small"
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -138,7 +138,7 @@ const Register = () => {
                   label="Password"
                   variant="outlined"
                   size="small"
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -154,7 +154,7 @@ const Register = () => {
                   label="Password Again"
                   variant="outlined"
                   size="small"
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -188,6 +188,7 @@ const Register = () => {
                     "&:hover": {
                       bgcolor: "#571104",
                     },
+                    maxWidth: "540px"
                   }}
                 >
                   Login
@@ -211,6 +212,8 @@ const Register = () => {
                       bgcolor: "#3949AB",
                       color: "#ffff"
                     },
+                    maxWidth: "540px"
+
                   }}
                 >
                   Register
