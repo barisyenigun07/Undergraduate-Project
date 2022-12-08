@@ -51,7 +51,7 @@ const Register = () => {
           </Box>
         </Grid>
         <Grid item xs={5}>
-          <Box sx={{ textAlign: "center", mt: 14 }}>
+          <Box sx={{ textAlign: "center", mt: 2 }}>
             <Stack spacing={2}>
               <Box>
                 <Typography
@@ -63,7 +63,7 @@ const Register = () => {
                   LOGIN
                 </Typography>
                 <br /> <br />
-                <br /> <br />
+       
               </Box>
               <Box sx={{ px: 8 }}>
                 <TextField
