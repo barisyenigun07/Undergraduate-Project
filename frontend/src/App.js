@@ -16,6 +16,7 @@ import Landing from "./components/Landing";
 
 
 import "./App.css";
+import Register from "./components/Register";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -91,7 +92,7 @@ function App() {
           </Toolbar>
         </AppBar>
       </Box> */}
-            <Landing></Landing>
+            <Register></Register>
     </>
   );
 }
