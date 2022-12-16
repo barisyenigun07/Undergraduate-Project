@@ -75,13 +75,6 @@ const Register = () => {
                   variant="outlined"
                   size="small"
                   sx={{ width: 1, maxWidth: "540px" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonIcon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
               <Box sx={{ px: 8 }}>
@@ -91,13 +84,6 @@ const Register = () => {
                   variant="outlined"
                   size="small"
                   sx={{ width: 1, maxWidth: "540px" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonAddAlt1Icon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
               <Box sx={{ px: 8 }}>
@@ -107,13 +93,6 @@ const Register = () => {
                   variant="outlined"
                   size="small"
                   sx={{ width: 1, maxWidth: "540px" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PhoneEnabledIcon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
               <Box sx={{ px: 8 }}>
@@ -123,13 +102,6 @@ const Register = () => {
                   variant="outlined"
                   size="small"
                   sx={{ width: 1, maxWidth: "540px" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <EmailIcon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
               <Box sx={{ px: 8 }}>
@@ -139,13 +111,6 @@ const Register = () => {
                   variant="outlined"
                   size="small"
                   sx={{ width: 1, maxWidth: "540px" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockIcon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
               <Box sx={{ px: 8 }}>
@@ -155,13 +120,6 @@ const Register = () => {
                   variant="outlined"
                   size="small"
                   sx={{ width: 1, maxWidth: "540px" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockIcon />
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
               <Box>
@@ -191,14 +149,14 @@ const Register = () => {
                     maxWidth: "540px"
                   }}
                 >
-                  Login
+                  Register
                 </Button>
               </Box>
               <Divider>Or</Divider>
 
               <Box sx={{ px: 8 }}>
                 <Button
-                  href="#"
+                  href="/login"
                   variant="contained"
                   sx={{
                     color: "#3949AB",
@@ -216,8 +174,9 @@ const Register = () => {
 
                   }}
                 >
-                  Register
+                  Login
                 </Button>
+                
               </Box>
             </Stack>
           </Box>

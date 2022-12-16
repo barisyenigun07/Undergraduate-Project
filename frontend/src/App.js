@@ -13,10 +13,12 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import AppBar2 from "./components/AppBar2";
 import Landing from "./components/Landing";
-
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import "./App.css";
 import Register from "./components/Register";
+import Login from "./components/Login";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -62,37 +64,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function App() {
   return (
     <>
-      {/*
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={handleDrawerOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              İYTEM'LAK
-            </Typography>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
-            <Button color="inherit">Login</Button>
-          </Toolbar>
-        </AppBar>
-      </Box> */}
-            <Register></Register>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Register/>} />
+      <Route path='/login' element={<Login/>} />
+      <Route path='/register' element={<Register/>} />
+      <Route path='/landing' element={<div>Dashboard</div>} />
+
+    </Routes>
+    </BrowserRouter>
+
+
     </>
   );
 }

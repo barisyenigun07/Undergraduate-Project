@@ -111,7 +111,7 @@ const Login = () => {
 
               <Box sx={{ px: 8 }}>
                 <Button
-                  href="#"
+                  href="/login"
                   variant="contained"
                   sx={{
                     borderRadius: 5,
@@ -130,7 +130,7 @@ const Login = () => {
 
               <Box sx={{ px: 8 }}>
                 <Button
-                  href="#"
+                  href="/register"
                   variant="contained"
                   sx={{
                     color: "#3949AB",
