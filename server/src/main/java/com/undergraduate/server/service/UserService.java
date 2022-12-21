@@ -4,6 +4,7 @@ package com.undergraduate.server.service;
 import com.undergraduate.server.entity.User;
 import com.undergraduate.server.exception.BusinessException;
 import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.model.request.UpdateUserRequest;
 import com.undergraduate.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,5 +27,13 @@ public class UserService {
             throw new BusinessException(ErrorCode.unauthorized,"Yetkiniz bulunmuyor.");
         }
         return userRepository.findById(Long.parseLong(principal));
+    }
+
+    public void updateUser(UpdateUserRequest body){
+        User user = getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"Kullanıcı bulunamadı."));
+        user.setName(body.getName());
+        user.setUsername(body.getUsername());
+        user.setEmail(body.getEmail());
+        userRepository.save(user);
     }
 }

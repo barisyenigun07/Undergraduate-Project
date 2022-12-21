@@ -10,7 +10,7 @@ public class HousemateSearchingAdvertRequest {
     private String detail;
     private double monthlyRentFee;
     private String houseType;
-    private String roomNumber;
+    private String roomCount;
     private double area;
     private String warmingType;
     private double feePerPerson;

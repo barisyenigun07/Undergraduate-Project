@@ -17,9 +17,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HouseRentAdvert extends Advert{
-    @Column(name = "rent")
-    private double rent;
+public class HouseAdvert extends Advert{
+    @Column(name = "price")
+    private double price;
     @Column(name = "room_count")
     private String roomCount;
     @Column(name = "area")
@@ -28,12 +28,16 @@ public class HouseRentAdvert extends Advert{
     private String warmingType;
     @Column(name = "house_type")
     private String houseType;
+    @Column(name = "property_type")
+    private String propertyType;
     @Column(name = "address")
     private String address;
     @Column(name = "has_furniture")
     private boolean hasFurniture;
     @Column(name = "is_on_site")
     private boolean isOnSite;
+    @Column(name = "dues")
+    private double dues;
     @ElementCollection
     @Column(name = "photo_links")
     private List<String> photoLinks;

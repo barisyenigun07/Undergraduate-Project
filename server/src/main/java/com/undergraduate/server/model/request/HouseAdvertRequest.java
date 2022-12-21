@@ -8,10 +8,10 @@ import java.util.List;
 
 @Data
 @ToString
-public class HouseRentAdvertRequest {
+public class HouseAdvertRequest {
     private String title;
     private String detail;
-    private double rent;
+    private double price;
     private String roomCount;
     private String area;
     private String warmingType;
