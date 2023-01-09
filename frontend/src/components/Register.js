@@ -124,7 +124,7 @@ const Register = () => {
                   sx={{ width: 1, maxWidth: "540px" }}
                 />
               </Box>
-              <Box sx={{ px: 8 }}>
+              <Box sx={{ px: 8, textAlign: 'left' }}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Select the type of user</InputLabel>
                   <Select
@@ -132,24 +132,13 @@ const Register = () => {
                     id="demo-simple-select"
                     label="Select the type of user"
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <MenuItem value={"Student"}>Student</MenuItem>
+                    <MenuItem value={"House Owner"} >House Owner</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
 
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: "12px",
-                    color: "#3949AB",
-                    textAlign: "center",
-                  }}
-                >
-                  Forgot password?
-                </Typography>
-              </Box>
+
 
               <Box sx={{ px: 8 }}>
                 <Button
