@@ -7,16 +7,19 @@ import {
   Paper,
   Typography,
   Stack,
-  InputAdornment,
   Divider,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from "@mui/material";
 import bg from "./bg-logo.jpg";
 import { styled } from "@mui/material/styles";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
-import PersonIcon from '@mui/icons-material/Person';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
+import PersonIcon from "@mui/icons-material/Person";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -66,7 +69,6 @@ const Register = () => {
                   REGISTER
                 </Typography>
                 <br /> <br />
-       
               </Box>
               <Box sx={{ px: 8 }}>
                 <TextField
@@ -122,6 +124,21 @@ const Register = () => {
                   sx={{ width: 1, maxWidth: "540px" }}
                 />
               </Box>
+              <Box sx={{ px: 8 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Select the type of user</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Select the type of user"
+                  >
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
               <Box>
                 <Typography
                   sx={{
@@ -146,7 +163,7 @@ const Register = () => {
                     "&:hover": {
                       bgcolor: "#571104",
                     },
-                    maxWidth: "540px"
+                    maxWidth: "540px",
                   }}
                 >
                   Register
@@ -168,15 +185,13 @@ const Register = () => {
                     width: 1,
                     "&:hover": {
                       bgcolor: "#3949AB",
-                      color: "#ffff"
+                      color: "#ffff",
                     },
-                    maxWidth: "540px"
-
+                    maxWidth: "540px",
                   }}
                 >
                   Login
                 </Button>
-                
               </Box>
             </Stack>
           </Box>
