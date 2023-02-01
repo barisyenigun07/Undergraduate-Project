@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,6 +21,8 @@ public abstract class Advert {
     private String title;
     @Column(name = "detail")
     private String detail;
+    @Column(name = "published_date")
+    private LocalDate publishedDate = LocalDate.now();
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

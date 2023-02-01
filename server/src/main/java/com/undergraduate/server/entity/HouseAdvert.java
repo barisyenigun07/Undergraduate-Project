@@ -5,14 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "house_rent_advert")
+@Table(name = "house_advert")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +20,7 @@ public class HouseAdvert extends Advert{
     @Column(name = "room_count")
     private String roomCount;
     @Column(name = "area")
-    private String area;
+    private double area;
     @Column(name = "warming_type")
     private String warmingType;
     @Column(name = "house_type")
@@ -39,6 +36,7 @@ public class HouseAdvert extends Advert{
     @Column(name = "dues")
     private double dues;
     @ElementCollection
-    @Column(name = "photo_links")
-    private List<String> photoLinks;
+    @CollectionTable(name = "house_images", joinColumns = @JoinColumn(name = "advert_id"))
+    @Column(name = "image_url")
+    private Set<String> imageUrls;
 }

@@ -14,7 +14,7 @@ public class HouseAdvertResponse {
     private String detail;
     private double price;
     private String roomCount;
-    private String area;
+    private double area;
     private String warmingType;
     private String houseType;
     private String address;

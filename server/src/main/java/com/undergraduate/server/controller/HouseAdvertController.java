@@ -4,8 +4,10 @@ import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.service.HouseAdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -17,8 +19,8 @@ public class HouseAdvertController {
         this.houseAdvertService = houseAdvertService;
     }
 
-    @PostMapping("/house-advert")
-    public void createHouseAdvert(@RequestBody HouseAdvertRequest body){
+    @PostMapping(value = "/house-advert", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public void createHouseAdvert(@ModelAttribute HouseAdvertRequest body){
         houseAdvertService.createHouseAdvert(body);
     }
 

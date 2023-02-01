@@ -70,7 +70,6 @@ public class HousemateSearchingAdvertService {
         housemateSearchingAdvert.setLivingPeopleCount(body.getLivingPeopleCount());
 
         housemateSearchingAdvertRepository.save(housemateSearchingAdvert);
-
     }
 
     public void deleteHousemateSearchingAdvert(Long id){

@@ -5,11 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "belongings_advert")
@@ -18,17 +15,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BelongingsAdvert extends Advert{
-    @Column(name = "price")
+    @Column(name = "price",nullable = false)
     private double price;
-    @Column(name = "type")
+    @Column(name = "type",nullable = false)
     private String type;
-    @Column(name = "status")
+    @Column(name = "status",nullable = false)
     private String status;
-    @Column(name = "is_shippable")
+    @Column(name = "is_shippable",nullable = false)
     private boolean isShippable;
-    @Column(name = "is_exchangeable")
+    @Column(name = "is_exchangeable",nullable = false)
     private boolean isExchangeable;
     @ElementCollection
-    @Column(name = "photo_links")
-    private List<String> photoLinks;
+    @CollectionTable(
+            name = "belongings_image",
+            joinColumns = @JoinColumn(name = "advert_id")
+    )
+    @Column(name = "image_url")
+    private Set<String> imageUrls;
 }

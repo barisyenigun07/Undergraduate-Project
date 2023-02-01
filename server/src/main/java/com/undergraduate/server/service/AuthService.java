@@ -1,10 +1,12 @@
 package com.undergraduate.server.service;
 
+import com.undergraduate.server.entity.Role;
 import com.undergraduate.server.entity.User;
 import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.LoginRequest;
 import com.undergraduate.server.model.request.RegisterRequest;
 import com.undergraduate.server.model.response.AuthResponse;
+import com.undergraduate.server.repository.RoleRepository;
 import com.undergraduate.server.repository.UserRepository;
 import com.undergraduate.server.security.JwtUserDetailsService;
 import com.undergraduate.server.security.JwtUtil;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Service
@@ -22,12 +25,15 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
+    private RoleRepository roleRepository;
+
     @Autowired
-    public AuthService(JwtUserDetailsService userDetailsService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserRepository userRepository){
+    public AuthService(JwtUserDetailsService userDetailsService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository){
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
 
@@ -35,32 +41,45 @@ public class AuthService {
         Optional<User> optionalUserByUsername = userRepository.findByUsername(body.getUsername());
         Optional<User> optionalUserByEmail = userRepository.findByEmail(body.getEmail());
         if (optionalUserByUsername.isPresent()){
-            throw new BusinessException(ErrorCode.user_already_exists,"Böyle bir kullanıcı var.");
+            throw new BusinessException(ErrorCode.user_already_exists,"User already exists.");
         }
 
         if (optionalUserByEmail.isPresent()){
-            throw new BusinessException(ErrorCode.email_already_taken,"Bu email önceden alınmış.");
+            throw new BusinessException(ErrorCode.email_already_taken,"Email has already taken.");
         }
 
         if (!body.getPassword().equals(body.getPasswordRepeat())){
-            throw new BusinessException(ErrorCode.password_mismatch,"Şifreler uyuşmadı.");
+            throw new BusinessException(ErrorCode.password_mismatch,"Passwords do not match.");
         }
 
         User user = new User();
         user.setName(body.getName());
         user.setUsername(body.getUsername());
         user.setEmail(body.getEmail());
+        user.setContactInfo(body.getContactInfo());
         user.setPassword(passwordEncoder.encode(body.getPassword()));
+
+        Role role = null;
+
+        if (body.getRole().equals("Student")){
+            role = roleRepository.findByName("STUDENT");
+        }
+        else if (body.getRole().equals("House Owner")){
+            role = roleRepository.findByName("HOUSE_OWNER");
+        }
+
+        user.setRole(role);
+
         userRepository.save(user);
     }
 
     public AuthResponse login(LoginRequest body){
         Optional<User> optionalUser = userRepository.findByUsername(body.getUsername());
         if (!optionalUser.isPresent()){
-            throw new BusinessException(ErrorCode.user_not_found,"Kullanıcı bulunamadı.");
+            throw new BusinessException(ErrorCode.user_not_found,"User not found.");
         }
         if (!passwordEncoder.matches(body.getPassword(), optionalUser.get().getPassword())){
-            throw new BusinessException(ErrorCode.password_mismatch,"Şifreler uyuşmadı.");
+            throw new BusinessException(ErrorCode.password_mismatch,"Passwords do not match.");
         }
         final UserDetails userDetails = userDetailsService.loadUserByUsername(body.getUsername());
         final String jwtToken = jwtUtil.createToken(userDetails);

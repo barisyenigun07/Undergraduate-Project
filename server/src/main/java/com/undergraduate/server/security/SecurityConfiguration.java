@@ -3,6 +3,7 @@ package com.undergraduate.server.security;
 import com.undergraduate.server.util.JwtAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,6 +50,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/house-advert/**").hasAnyAuthority("HOUSE_OWNER")
+                .antMatchers(HttpMethod.PUT, "/house-advert/**").hasAnyAuthority("HOUSE_OWNER")
+                .antMatchers(HttpMethod.DELETE, "/house-advert/**").hasAnyAuthority("HOUSE_OWNER")
+                .antMatchers(HttpMethod.POST,"/housemate-searching-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.PUT,"/housemate-searching-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.DELETE,"/housemate-searching-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.POST,"/housemate-wanting-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.PUT,"/housemate-wanting-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.DELETE,"/housemate-wanting-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.POST,"/belongings-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.PUT,"/belongings-advert/**").hasAnyAuthority("STUDENT")
+                .antMatchers(HttpMethod.DELETE,"/belongings-advert/**").hasAnyAuthority("STUDENT")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)

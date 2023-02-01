@@ -1,12 +1,27 @@
 package com.undergraduate.server.model.response;
 
+import com.undergraduate.server.entity.User;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @ToString
+@Builder
 public class UserResponse {
     private Long id;
     private String name;
     private String username;
+    private String contactInfo;
+    private String profilePhotoUrl;
+
+    public static UserResponse fromEntity(User user){
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .username(user.getUsername())
+                .contactInfo(user.getContactInfo())
+                .profilePhotoUrl(user.getProfilePhotoUrl())
+                .build();
+    }
 }

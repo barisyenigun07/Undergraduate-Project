@@ -21,7 +21,7 @@ public class BelongingsAdvertResponse {
     public static BelongingsAdvertResponse fromEntity(BelongingsAdvert belongingsAdvert){
         return BelongingsAdvertResponse.builder()
                 .id(belongingsAdvert.getId())
-                .title(belongingsAdvert.getStatus())
+                .title(belongingsAdvert.getTitle())
                 .detail(belongingsAdvert.getDetail())
                 .price(belongingsAdvert.getPrice())
                 .type(belongingsAdvert.getType())

@@ -20,12 +20,17 @@ public class User {
     private Long id;
     @Column(name = "name",nullable = false)
     private String name;
-    @Column(name = "profile_photo_link")
-    private String profilePhotoLink;
     @Column(name = "username", nullable = false, unique = true)
     private String username;
+    @Column(name = "profile_photo_url")
+    private String profilePhotoUrl;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password", nullable = false, unique = true)
     private String password;
+    @Column(name = "contact_info",nullable = false, unique = true)
+    private String contactInfo;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

@@ -23,7 +23,7 @@ public class HousemateSearchingAdvertController {
     }
 
     @GetMapping("/housemate-searching-advert/{id}")
-    public HousemateSearchingAdvertResponse getHousemateSearchingAdvert(@PathVariable  Long id){
+    public HousemateSearchingAdvertResponse getHousemateSearchingAdvert(@PathVariable Long id){
         return housemateSearchingAdvertService.getHousemateSearchingAdvert(id);
     }
 
@@ -33,8 +33,8 @@ public class HousemateSearchingAdvertController {
     }
 
     @PutMapping("/housemate-searching-advert/{id}")
-    public void updateHousemateSearchingAdvert(@PathVariable Long id, @RequestBody HousemateSearchingAdvertRequest newBody){
-        housemateSearchingAdvertService.updateHousemateSearchingAdvert(id, newBody);
+    public void updateHousemateSearchingAdvert(@PathVariable Long id, @RequestBody HousemateSearchingAdvertRequest body){
+        housemateSearchingAdvertService.updateHousemateSearchingAdvert(id, body);
     }
 
     @DeleteMapping("/housemate-searching-advert/{id}")

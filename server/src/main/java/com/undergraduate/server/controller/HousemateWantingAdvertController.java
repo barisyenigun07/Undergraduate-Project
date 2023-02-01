@@ -33,8 +33,8 @@ public class HousemateWantingAdvertController {
     }
 
     @PutMapping("/housemate-wanting-advert/{id}")
-    public void updateHousemateWantingAdvert(@PathVariable Long id, @RequestBody HousemateWantingAdvertRequest newBody){
-        housemateWantingAdvertService.updateHousemateWantingAdvert(id,newBody);
+    public void updateHousemateWantingAdvert(@PathVariable Long id, @RequestBody HousemateWantingAdvertRequest body){
+        housemateWantingAdvertService.updateHousemateWantingAdvert(id,body);
     }
 
     @DeleteMapping("/housemate-wanting-advert/{id}")

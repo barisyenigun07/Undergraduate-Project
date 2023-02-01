@@ -13,11 +13,12 @@ public class HouseAdvertRequest {
     private String detail;
     private double price;
     private String roomCount;
-    private String area;
+    private double area;
     private String warmingType;
     private String houseType;
     private String address;
     private boolean hasFurniture;
     private boolean isOnSite;
-    private List<MultipartFile> photoLinks;
+    private double dues;
+    private List<MultipartFile> photos;
 }

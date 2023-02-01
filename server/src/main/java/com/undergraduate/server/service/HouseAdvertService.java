@@ -1,5 +1,6 @@
 package com.undergraduate.server.service;
 
+import com.undergraduate.server.bucket.BucketName;
 import com.undergraduate.server.entity.HouseAdvert;
 import com.undergraduate.server.entity.User;
 import com.undergraduate.server.exception.BusinessException;
@@ -7,20 +8,25 @@ import com.undergraduate.server.exception.ErrorCode;
 import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.repository.HouseAdvertRepository;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class HouseAdvertService {
     private final HouseAdvertRepository houseAdvertRepository;
+    private final ImageStorageService imageStorageService;
     private final UserService userService;
 
     @Autowired
-    public HouseAdvertService(HouseAdvertRepository houseAdvertRepository, UserService userService){
+    public HouseAdvertService(HouseAdvertRepository houseAdvertRepository, ImageStorageService imageStorageService,UserService userService){
         this.houseAdvertRepository = houseAdvertRepository;
+        this.imageStorageService = imageStorageService;
         this.userService = userService;
     }
 
@@ -37,6 +43,26 @@ public class HouseAdvertService {
         houseAdvert.setAddress(body.getAddress());
         houseAdvert.setHasFurniture(body.isHasFurniture());
         houseAdvert.setOnSite(body.isOnSite());
+        houseAdvert.setDues(body.getDues());
+
+        if (body.getPhotos().size() > 0){
+            Set<String> imageUrls = new HashSet<>();
+            for (MultipartFile file : body.getPhotos()){
+                isImage(file);
+                Map<String, String> metadata = extractMetadata(file);
+                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), UUID.randomUUID());
+                String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
+                try {
+                    imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
+                    imageUrls.add(filename);
+                }
+                catch (IOException e){
+                    throw new IllegalStateException(e);
+                }
+            }
+            houseAdvert.setImageUrls(imageUrls);
+        }
+
         houseAdvert.setUser(user);
         houseAdvertRepository.save(houseAdvert);
     }
@@ -68,6 +94,26 @@ public class HouseAdvertService {
         houseAdvert.setAddress(body.getAddress());
         houseAdvert.setHasFurniture(body.isHasFurniture());
         houseAdvert.setOnSite(body.isOnSite());
+        houseAdvert.setDues(body.getDues());
+
+        if (body.getPhotos().size() > 0){
+            Set<String> imageUrls = new HashSet<>();
+            for (MultipartFile file : body.getPhotos()){
+                isImage(file);
+                Map<String, String> metadata = extractMetadata(file);
+                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), UUID.randomUUID());
+                String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
+                try {
+                    imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
+                    imageUrls.add(filename);
+                }
+                catch (IOException e){
+                    throw new IllegalStateException(e);
+                }
+            }
+            houseAdvert.setImageUrls(imageUrls);
+        }
+
         houseAdvertRepository.save(houseAdvert);
     }
 
@@ -78,6 +124,19 @@ public class HouseAdvertService {
             throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this!");
         }
         houseAdvertRepository.deleteById(id);
+    }
+
+    private void isImage(MultipartFile file){
+        if (!Arrays.asList(ContentType.IMAGE_PNG.getMimeType(), ContentType.IMAGE_JPEG.getMimeType()).contains(file.getContentType())){
+            throw new IllegalStateException("File(s) must be image.");
+        }
+    }
+
+    private Map<String, String> extractMetadata(MultipartFile file){
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type",file.getContentType());
+        metadata.put("Content-Length",String.valueOf(file.getSize()));
+        return metadata;
     }
 
 }
