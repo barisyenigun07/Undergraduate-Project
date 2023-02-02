@@ -12,8 +12,8 @@ const Landing = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height:'100vh',
-        backgroundImage: `url(${bg})`
+        height: "100vh",
+        backgroundImage: `url(${bg})`,
       }}
     >
       <TextField
@@ -23,10 +23,12 @@ const Landing = () => {
         sx={{
           backgroundColor: "white",
           borderRadius: 5,
-          width:'550px'
+          width: "550px",
         }}
       />
-      <Button href="#" variant="contained" sx={{ml:1}}>Ara</Button>
+      <Button href="#" variant="contained" sx={{ ml: 1 }}>
+        Ara
+      </Button>
     </Box>
   );
 };

@@ -1,28 +1,27 @@
-import React from 'react'
-import { useQuery } from 'react-query'
+import React from "react";
+import { useQuery } from "react-query";
 import Home from "../Home/index.js";
-import Card from '../../components/Card/'
-
+import Card from "../../components/Card/";
 
 const index = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-//   const { isLoading, error, data } = useQuery('repoData', () =>
-//   fetch('localhost:4000/houses-list').then(res =>
-//     res.json()
-//   )
-// )
+  //   const { isLoading, error, data } = useQuery('repoData', () =>
+  //   fetch('localhost:4000/houses-list').then(res =>
+  //     res.json()
+  //   )
+  // )
 
-// if (isLoading) return 'Loading...'
- 
-// if (error) return 'An error has occurred: ' + error.message
+  // if (isLoading) return 'Loading...'
 
-// console.log(data);
+  // if (error) return 'An error has occurred: ' + error.message
 
- return (
+  // console.log(data);
+
+  return (
     <div>
-      <Home/>
+      <Home />
     </div>
-  )
-}
+  );
+};
 
-export default index
+export default index;
