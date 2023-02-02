@@ -309,7 +309,7 @@ function ResponsiveAppBar() {
         />
       </FormGroup>
 
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2, textAlign: "center" }}>
         <Typography
           sx={{ fontSize: "24px", fontWeight: "bold" }}
           variant="h1"
@@ -333,15 +333,11 @@ function ResponsiveAppBar() {
         <ReactLogo />
         <ReactLogo />
       </Box>
+
       <Box
+        width={"100%"}
         sx={{
           textAlign: "center",
-          justifyItems: "center",
-          "& > :not(style)": {
-            m: 1,
-            width: 128,
-          },
-          p: 2,
         }}
       >
         <Typography
