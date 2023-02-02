@@ -18,6 +18,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import Card from "../../components/Card";
 
 import bg from "../../../src/bg-logo.jpg";
+import img1 from "../../../src/Component1.svg";
+import { ReactComponent as ReactLogo } from "../../../src/Component1.svg";
+
 import { maxWidth } from "@mui/system";
 
 const pages = ["Anasayfa", "Satılık İlanlar", "İlan Ver", "Bize Ulaş"];
@@ -305,7 +308,42 @@ function ResponsiveAppBar() {
           label={auth ? "Logout" : "Login"}
         />
       </FormGroup>
+
       <Box sx={{ p: 2 }}>
+        <Typography
+          sx={{ fontSize: "24px", fontWeight: "bold" }}
+          variant="h1"
+          component="h2"
+        >
+          Find What You Need
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          justifyContent: "center",
+          display: "flex",
+          flexWrap: "wrap",
+          "& > :not(style)": {
+            m: 1,
+          },
+          p: 2,
+        }}
+      >
+        <ReactLogo />
+        <ReactLogo />
+        <ReactLogo />
+      </Box>
+      <Box
+        sx={{
+          textAlign: "center",
+          justifyItems: "center",
+          "& > :not(style)": {
+            m: 1,
+            width: 128,
+          },
+          p: 2,
+        }}
+      >
         <Typography
           sx={{ fontSize: "24px", fontWeight: "bold" }}
           variant="h1"
@@ -316,6 +354,7 @@ function ResponsiveAppBar() {
       </Box>
       <Box
         sx={{
+          justifyContent: "center",
           display: "flex",
           flexWrap: "wrap",
           "& > :not(style)": {
