@@ -5,8 +5,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
-import Navbar from "./pages/Home/index.js";
+import Home from "./pages/Home/index.js";
 import Houses from "./pages/Houses/index";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/landing" element={<div>Dashboard</div>} />
-          <Route path="/create" element={<Navbar />} />
-          <Route path="/home" element={<Houses />} />
+          <Route path="/create" element={<Houses />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/navbar" element={<Navbar />} />
         </Routes>
       </BrowserRouter>
     </>

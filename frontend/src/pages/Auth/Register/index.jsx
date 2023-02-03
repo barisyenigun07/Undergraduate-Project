@@ -4,19 +4,20 @@ import {
   TextField,
   Button,
   Grid,
-  Paper,
   Typography,
   Stack,
   Divider,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   Link,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 
 import { useFormik } from "formik";
 import validationSchema from "./validations";
+
+import { fetchRegister } from "../../../api";
 
 const Register = () => {
   const formik = useFormik({
@@ -26,10 +27,14 @@ const Register = () => {
       phone: "",
       email: "",
       password: "",
-      passwordConfirm: "",
+      passwordRepeat: "",
+      role: "",
     },
     onSubmit: async (values, bag) => {
-      console.log(values);
+      try {
+        const registerResponse = await fetchRegister(values);
+        console.log(values);
+      } catch (error) {}
     },
     validationSchema,
   });
@@ -155,7 +160,7 @@ const Register = () => {
                     variant="outlined"
                     size="small"
                     sx={{ width: 1, maxWidth: "540px" }}
-                    name="passwordConfirm"
+                    name="passwordRepeat"
                     type={"password"}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -167,22 +172,25 @@ const Register = () => {
                   />
                 </Box>
 
-                {/*
-              <Box sx={{ px: 8, textAlign: 'left', mt:2 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Select the type of user</InputLabel>
-                  <Select
-                  defaultValue={"Student"}
-                    label="Select the type of user"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={"Student"} >Student</MenuItem>
-                    <MenuItem value={"House Owner"} >House Owner</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+                <Box sx={{ px: 8, textAlign: "left", mt: 2 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Select the type of user</InputLabel>
+                    <Select
+                      id="role"
+                      name="role"
+                      defaultValue={"Student"}
+                      label="Select the type of user"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.role}
+                      error={formik.touched.role && formik.errors.role}
+                    >
+                      <MenuItem value={"Student"}>Student</MenuItem>
+                      <MenuItem value={"House Owner"}>House Owner</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
 
-              */}
                 <Box
                   sx={{
                     px: 8,
