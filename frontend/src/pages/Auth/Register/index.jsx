@@ -195,7 +195,6 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.role}
-                      helperText={formik.touched.role && formik.errors.role}
                     >
                       <MenuItem value={"Student"}>Student</MenuItem>
                       <MenuItem value={"House Owner"}>House Owner</MenuItem>
