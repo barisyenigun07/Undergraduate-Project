@@ -12,6 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Alert,
 } from "@mui/material";
 
 import { useFormik } from "formik";
@@ -30,13 +31,15 @@ const Register = () => {
       passwordRepeat: "",
       role: "",
     },
+    validationSchema,
     onSubmit: async (values, bag) => {
       try {
         const registerResponse = await fetchRegister(values);
         console.log(values);
-      } catch (error) {}
+      } catch (error) {
+        bag.setErrors({ general: error.response.data.message });
+      }
     },
-    validationSchema,
   });
 
   return (
@@ -81,6 +84,11 @@ const Register = () => {
                 </Typography>
                 <br /> <br />
               </Box>
+              <Box>
+                {formik.errors.general && (
+                  <Alert status="error">{formik.errors.general}</Alert>
+                )}
+              </Box>
               <form onSubmit={formik.handleSubmit}>
                 <Box sx={{ px: 8 }}>
                   <TextField
@@ -93,7 +101,7 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.name}
-                    error={formik.touched.name && formik.errors.name}
+                    helperText={formik.touched.name && formik.errors.name}
                   />
                 </Box>
                 <Box sx={{ px: 8, mt: 2 }}>
@@ -107,7 +115,9 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.username}
-                    error={formik.touched.username && formik.errors.username}
+                    helperText={
+                      formik.touched.username && formik.errors.username
+                    }
                   />
                 </Box>
                 <Box sx={{ px: 8, mt: 2 }}>
@@ -121,7 +131,7 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.phone}
-                    error={formik.touched.phone && formik.errors.phone}
+                    helperText={formik.touched.phone && formik.errors.phone}
                   />
                 </Box>
                 <Box sx={{ px: 8, mt: 2 }}>
@@ -135,7 +145,7 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.email}
-                    error={formik.touched.email && formik.errors.email}
+                    helperText={formik.touched.email && formik.errors.email}
                   />
                 </Box>
                 <Box sx={{ px: 8, mt: 2 }}>
@@ -150,7 +160,9 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
-                    error={formik.touched.password && formik.errors.password}
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                    }
                   />
                 </Box>
                 <Box sx={{ px: 8, mt: 2 }}>
@@ -165,7 +177,7 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.passwordConfirm}
-                    error={
+                    helperText={
                       formik.touched.passwordConfirm &&
                       formik.errors.passwordConfirm
                     }
@@ -183,14 +195,13 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.role}
-                      error={formik.touched.role && formik.errors.role}
+                      helperText={formik.touched.role && formik.errors.role}
                     >
                       <MenuItem value={"Student"}>Student</MenuItem>
                       <MenuItem value={"House Owner"}>House Owner</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
-                
 
                 <Box
                   sx={{
