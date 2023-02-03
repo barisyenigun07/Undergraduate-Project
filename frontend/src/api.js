@@ -8,12 +8,12 @@ export const fetchHouseList = async ({ pageParam = 1 }) => {
 };
 
 export const fetchRegister = async (input) => {
-  console.log(process.env.REACT_APP_BASE_ENDPOINT);
+  
   const { data } = await axios.post(
-    `${process.env.REACT_APP_BASE_ENDPOINT}/register`,
+    "/register",
     input
   );
-  console.log(process.env.REACT_APP_BASE_ENDPOINT, " ab");
+  
 
   return data;
 };

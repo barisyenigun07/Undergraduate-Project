@@ -24,7 +24,7 @@ const Register = () => {
     initialValues: {
       name: "",
       username: "",
-      phone: "",
+      contactInfo: "",
       email: "",
       password: "",
       passwordRepeat: "",
@@ -117,7 +117,7 @@ const Register = () => {
                     variant="outlined"
                     size="small"
                     sx={{ width: 1, maxWidth: "540px" }}
-                    name="phone"
+                    name="contactInfo"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.phone}
@@ -190,6 +190,7 @@ const Register = () => {
                     </Select>
                   </FormControl>
                 </Box>
+                
 
                 <Box
                   sx={{
