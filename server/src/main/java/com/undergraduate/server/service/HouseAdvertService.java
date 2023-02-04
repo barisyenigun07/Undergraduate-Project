@@ -10,6 +10,7 @@ import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.repository.HouseAdvertRepository;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,17 +41,18 @@ public class HouseAdvertService {
         houseAdvert.setArea(body.getArea());
         houseAdvert.setWarmingType(body.getWarmingType());
         houseAdvert.setHouseType(body.getHouseType());
+        houseAdvert.setPropertyType(body.getPropertyType());
         houseAdvert.setAddress(body.getAddress());
         houseAdvert.setHasFurniture(body.isHasFurniture());
         houseAdvert.setOnSite(body.isOnSite());
         houseAdvert.setDues(body.getDues());
 
         if (body.getPhotos().size() > 0){
-            Set<String> imageUrls = new HashSet<>();
+            List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : body.getPhotos()){
                 isImage(file);
                 Map<String, String> metadata = extractMetadata(file);
-                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), UUID.randomUUID());
+                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), user.getId());
                 String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
@@ -77,6 +79,15 @@ public class HouseAdvertService {
         return houseAdverts.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
     }
 
+    @Cacheable(value = "images", key = "#filename")
+    public byte[] getImageOfHouseAdvert(Long id, String filename){
+        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        if (!houseAdvert.getImageUrls().contains(filename)){
+            throw new IllegalStateException();
+        }
+        return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),houseAdvert.getUser().getId()),filename);
+    }
+
     public void updateHouseAdvert(Long id, HouseAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
         HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
@@ -96,12 +107,17 @@ public class HouseAdvertService {
         houseAdvert.setOnSite(body.isOnSite());
         houseAdvert.setDues(body.getDues());
 
+        if (!houseAdvert.getImageUrls().isEmpty()){
+            String[] urls = convertListToArray(user.getId(), houseAdvert.getImageUrls());
+            imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(),urls);
+        }
+
         if (body.getPhotos().size() > 0){
-            Set<String> imageUrls = new HashSet<>();
+            List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : body.getPhotos()){
                 isImage(file);
                 Map<String, String> metadata = extractMetadata(file);
-                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), UUID.randomUUID());
+                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), user.getId());
                 String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
@@ -123,6 +139,10 @@ public class HouseAdvertService {
         if (!houseAdvert.getUser().equals(user)){
             throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this!");
         }
+        if (!houseAdvert.getImageUrls().isEmpty()) {
+            String[] urls = convertListToArray(user.getId(), houseAdvert.getImageUrls());
+            imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(), urls);
+        }
         houseAdvertRepository.deleteById(id);
     }
 
@@ -137,6 +157,14 @@ public class HouseAdvertService {
         metadata.put("Content-Type",file.getContentType());
         metadata.put("Content-Length",String.valueOf(file.getSize()));
         return metadata;
+    }
+
+    private String[] convertListToArray(long userId, List<String> urls){
+        String[] arr = new String[urls.size()];
+        for (int i = 0;i < arr.length;i++){
+            arr[i] = String.format("%s/%s",userId,urls.get(i));
+        }
+        return arr;
     }
 
 }

@@ -16,6 +16,7 @@ public class HousemateWantingAdvertResponse {
     private String gender;
     private boolean isSmoking;
     private boolean hasPet;
+    private UserResponse userResponse;
 
     public static HousemateWantingAdvertResponse fromEntity(HousemateWantingAdvert housemateWantingAdvert){
         return HousemateWantingAdvertResponse.builder()
@@ -26,6 +27,7 @@ public class HousemateWantingAdvertResponse {
                 .gender(housemateWantingAdvert.getGender())
                 .isSmoking(housemateWantingAdvert.isSmoking())
                 .hasPet(housemateWantingAdvert.isHasPet())
+                .userResponse(UserResponse.fromEntity(housemateWantingAdvert.getUser()))
                 .build();
     }
 }

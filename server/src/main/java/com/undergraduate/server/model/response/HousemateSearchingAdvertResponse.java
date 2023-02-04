@@ -20,6 +20,7 @@ public class HousemateSearchingAdvertResponse {
     private double feePerPerson;
     private boolean isOnSite;
     private int livingPeopleCount;
+    private UserResponse userResponse;
 
     public static HousemateSearchingAdvertResponse fromEntity(HousemateSearchingAdvert housemateSearchingAdvert){
         return HousemateSearchingAdvertResponse.builder()
@@ -34,6 +35,7 @@ public class HousemateSearchingAdvertResponse {
                 .feePerPerson(housemateSearchingAdvert.getFeePerPerson())
                 .isOnSite(housemateSearchingAdvert.isOnSite())
                 .livingPeopleCount(housemateSearchingAdvert.getLivingPeopleCount())
+                .userResponse(UserResponse.fromEntity(housemateSearchingAdvert.getUser()))
                 .build();
     }
 }

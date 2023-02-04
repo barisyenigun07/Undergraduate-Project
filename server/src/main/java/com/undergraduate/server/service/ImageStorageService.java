@@ -53,8 +53,8 @@ public class ImageStorageService {
         }
     }
 
-    public void deleteMultiple(String path ,String[] keys){
-        DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(path).withKeys(keys);
+    public void deleteMultipleImages(String bucketName ,String[] keys){
+        DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(bucketName).withKeys(keys);
         s3.deleteObjects(delObjReq);
     }
 }

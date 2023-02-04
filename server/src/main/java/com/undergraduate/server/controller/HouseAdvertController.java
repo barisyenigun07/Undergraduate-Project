@@ -4,10 +4,9 @@ import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.service.HouseAdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
+
 import java.util.List;
 
 @RestController
@@ -19,7 +18,7 @@ public class HouseAdvertController {
         this.houseAdvertService = houseAdvertService;
     }
 
-    @PostMapping(value = "/house-advert", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping( "/house-advert")
     public void createHouseAdvert(@ModelAttribute HouseAdvertRequest body){
         houseAdvertService.createHouseAdvert(body);
     }
@@ -34,8 +33,13 @@ public class HouseAdvertController {
         return houseAdvertService.getHouseAdverts();
     }
 
+    @GetMapping("/house-advert/{id}/image/download")
+    public byte[] getImageOfHouseAdvert(@PathVariable Long id, @RequestParam("filename") String filename){
+        return houseAdvertService.getImageOfHouseAdvert(id, filename);
+    }
+
     @PutMapping("/house-advert/{id}")
-    public void updateHouseAdvert(@PathVariable Long id, @RequestBody HouseAdvertRequest newBody){
+    public void updateHouseAdvert(@PathVariable Long id, @ModelAttribute HouseAdvertRequest newBody){
         houseAdvertService.updateHouseAdvert(id, newBody);
     }
 

@@ -16,6 +16,7 @@ import java.time.LocalDate;
 public abstract class Advert {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
     @Column(name = "title")
     private String title;

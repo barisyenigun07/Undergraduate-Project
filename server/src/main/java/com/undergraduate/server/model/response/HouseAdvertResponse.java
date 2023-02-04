@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @ToString
 @Builder
@@ -17,9 +20,13 @@ public class HouseAdvertResponse {
     private double area;
     private String warmingType;
     private String houseType;
+    private String propertyType;
     private String address;
     private boolean hasFurniture;
     private boolean isOnSite;
+    private double dues;
+    private List<String> imageUrls;
+    private UserResponse userResponse;
 
     public static HouseAdvertResponse fromEntity(HouseAdvert houseAdvert){
         return HouseAdvertResponse.builder()
@@ -31,9 +38,13 @@ public class HouseAdvertResponse {
                 .area(houseAdvert.getArea())
                 .warmingType(houseAdvert.getWarmingType())
                 .houseType(houseAdvert.getHouseType())
+                .propertyType(houseAdvert.getPropertyType())
                 .address(houseAdvert.getAddress())
                 .hasFurniture(houseAdvert.isHasFurniture())
                 .isOnSite(houseAdvert.isOnSite())
+                .dues(houseAdvert.getDues())
+                .imageUrls(houseAdvert.getImageUrls())
+                .userResponse(UserResponse.fromEntity(houseAdvert.getUser()))
                 .build();
     }
 }

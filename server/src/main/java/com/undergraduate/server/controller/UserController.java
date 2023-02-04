@@ -4,11 +4,11 @@ package com.undergraduate.server.controller;
 import com.undergraduate.server.entity.User;
 import com.undergraduate.server.exception.BusinessException;
 import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.model.request.UpdateUserRequest;
+import com.undergraduate.server.model.response.UserResponse;
 import com.undergraduate.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -25,8 +25,13 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public User getUser(@PathVariable Long id){
+    public UserResponse getUser(@PathVariable Long id){
         return userService.getUser(id);
+    }
+
+    @PutMapping("/user/me")
+    public void updateUser(@ModelAttribute UpdateUserRequest body){
+        userService.updateUser(body);
     }
 
 }

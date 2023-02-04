@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @ToString
 @Builder
@@ -17,6 +20,8 @@ public class BelongingsAdvertResponse {
     private String status;
     private boolean isShippable;
     private boolean isExchangeable;
+    private List<String> imageUrls;
+    private UserResponse userResponse;
 
     public static BelongingsAdvertResponse fromEntity(BelongingsAdvert belongingsAdvert){
         return BelongingsAdvertResponse.builder()
@@ -28,6 +33,8 @@ public class BelongingsAdvertResponse {
                 .status(belongingsAdvert.getStatus())
                 .isShippable(belongingsAdvert.isShippable())
                 .isExchangeable(belongingsAdvert.isExchangeable())
+                .imageUrls(belongingsAdvert.getImageUrls())
+                .userResponse(UserResponse.fromEntity(belongingsAdvert.getUser()))
                 .build();
     }
 }

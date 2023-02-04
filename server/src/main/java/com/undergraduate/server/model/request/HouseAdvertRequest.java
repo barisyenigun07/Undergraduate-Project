@@ -16,6 +16,7 @@ public class HouseAdvertRequest {
     private double area;
     private String warmingType;
     private String houseType;
+    private String propertyType;
     private String address;
     private boolean hasFurniture;
     private boolean isOnSite;

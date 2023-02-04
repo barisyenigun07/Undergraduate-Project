@@ -18,7 +18,7 @@ public class BelongingsAdvertController {
     }
 
     @PostMapping("/belongings-advert")
-    public void createBelongingsAdvertController(@RequestBody BelongingsAdvertRequest body){
+    public void createBelongingsAdvertController(@ModelAttribute BelongingsAdvertRequest body){
         belongingsAdvertService.createBelongingsAdvert(body);
     }
 
@@ -32,8 +32,13 @@ public class BelongingsAdvertController {
         return belongingsAdvertService.getBelongingsAdverts();
     }
 
+    @GetMapping("/belongings-advert/{id}/image/download")
+    public byte[] getImageOfBelongingsAdvert(@PathVariable Long id, @RequestParam("filename") String filename){
+        return belongingsAdvertService.getImageOfBelongingsAdvert(id, filename);
+    }
+
     @PutMapping("/belongings-advert/{id}")
-    public void updateBelongingsAdvert(@PathVariable Long id, @RequestBody BelongingsAdvertRequest newBody){
+    public void updateBelongingsAdvert(@PathVariable Long id, @ModelAttribute BelongingsAdvertRequest newBody){
         belongingsAdvertService.updateBelongingsAdvert(id, newBody);
     }
 

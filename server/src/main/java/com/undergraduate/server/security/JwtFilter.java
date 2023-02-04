@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         else {
-            System.out.println("Bearer string not found!");
+            //System.out.println("Bearer string not found!");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){

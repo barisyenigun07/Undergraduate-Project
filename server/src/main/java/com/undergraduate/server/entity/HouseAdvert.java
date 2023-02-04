@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "house_advert")
@@ -36,7 +36,7 @@ public class HouseAdvert extends Advert{
     @Column(name = "dues")
     private double dues;
     @ElementCollection
-    @CollectionTable(name = "house_images", joinColumns = @JoinColumn(name = "advert_id"))
+    @CollectionTable(name = "house_image", joinColumns = @JoinColumn(name = "advert_id"))
     @Column(name = "image_url")
-    private Set<String> imageUrls;
+    private List<String> imageUrls;
 }

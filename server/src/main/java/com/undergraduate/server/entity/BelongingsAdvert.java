@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "belongings_advert")
@@ -31,5 +31,5 @@ public class BelongingsAdvert extends Advert{
             joinColumns = @JoinColumn(name = "advert_id")
     )
     @Column(name = "image_url")
-    private Set<String> imageUrls;
+    private List<String> imageUrls;
 }
