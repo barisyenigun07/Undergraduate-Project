@@ -7,12 +7,12 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
+import com.undergraduate.server.exception.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public class ImageStorageService {
             s3.putObject(path, filename, inputStream, objectMetadata);
         }
         catch (AmazonServiceException e){
-            throw new IllegalStateException("Failed to upload file",e);
+            throw new FileUploadException();
         }
     }
 
@@ -49,8 +49,12 @@ public class ImageStorageService {
             return IOUtils.toByteArray(objectContent);
         }
         catch (AmazonServiceException | IOException e){
-            throw new IllegalStateException("Failed to download the file",e);
+            throw new IllegalStateException();
         }
+    }
+
+    public void delete(String bucketName, String key){
+        s3.deleteObject(bucketName, key);
     }
 
     public void deleteMultipleImages(String bucketName ,String[] keys){

@@ -2,12 +2,15 @@ package com.undergraduate.server.service;
 
 import com.undergraduate.server.entity.HousemateSearchingAdvert;
 import com.undergraduate.server.entity.User;
-import com.undergraduate.server.exception.BusinessException;
-import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HousemateSearchingAdvertRequest;
 import com.undergraduate.server.model.response.HousemateSearchingAdvertResponse;
 import com.undergraduate.server.repository.HousemateSearchingAdvertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public class HousemateSearchingAdvertService {
     }
 
     public void createHousemateSearchingAdvert(HousemateSearchingAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HousemateSearchingAdvert housemateSearchingAdvert = new HousemateSearchingAdvert();
         housemateSearchingAdvert.setTitle(body.getTitle());
         housemateSearchingAdvert.setDetail(body.getDetail());
@@ -42,7 +45,7 @@ public class HousemateSearchingAdvertService {
     }
 
     public HousemateSearchingAdvertResponse getHousemateSearchingAdvert(Long id){
-        HousemateSearchingAdvert housemateSearchingAdvert = housemateSearchingAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        HousemateSearchingAdvert housemateSearchingAdvert = housemateSearchingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         return HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert);
     }
 
@@ -51,11 +54,18 @@ public class HousemateSearchingAdvertService {
         return housemateSearchingAdverts.stream().map(housemateSearchingAdvert -> HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert)).collect(Collectors.toList());
     }
 
+    public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertPage(int pageNo, int size){
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
+        Page<HousemateSearchingAdvert> housemateSearchingAdvertPage = housemateSearchingAdvertRepository.findAll(pageable);
+        List<HousemateSearchingAdvert> housemateSearchingAdvertList = housemateSearchingAdvertPage.toList();
+        return housemateSearchingAdvertList.stream().map(housemateSearchingAdvert -> HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert)).collect(Collectors.toList());
+    }
+
     public void updateHousemateSearchingAdvert(Long id, HousemateSearchingAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
-        HousemateSearchingAdvert housemateSearchingAdvert = housemateSearchingAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HousemateSearchingAdvert housemateSearchingAdvert = housemateSearchingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!housemateSearchingAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this action!");
+            throw new UnauthorizedException();
         }
 
         housemateSearchingAdvert.setTitle(body.getTitle());
@@ -73,10 +83,10 @@ public class HousemateSearchingAdvertService {
     }
 
     public void deleteHousemateSearchingAdvert(Long id){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
-        HousemateSearchingAdvert housemateSearchingAdvert = housemateSearchingAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HousemateSearchingAdvert housemateSearchingAdvert = housemateSearchingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!housemateSearchingAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this action!");
+            throw new UnauthorizedException();
         }
 
         housemateSearchingAdvertRepository.deleteById(id);

@@ -2,12 +2,15 @@ package com.undergraduate.server.service;
 
 import com.undergraduate.server.entity.HousemateWantingAdvert;
 import com.undergraduate.server.entity.User;
-import com.undergraduate.server.exception.BusinessException;
-import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HousemateWantingAdvertRequest;
 import com.undergraduate.server.model.response.HousemateWantingAdvertResponse;
 import com.undergraduate.server.repository.HousemateWantingAdvertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public class HousemateWantingAdvertService {
     }
 
     public void createHousemateWantingAdvert(HousemateWantingAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User not found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HousemateWantingAdvert housemateWantingAdvert = new HousemateWantingAdvert();
         housemateWantingAdvert.setTitle(body.getTitle());
         housemateWantingAdvert.setDetail(body.getDetail());
@@ -38,7 +41,7 @@ public class HousemateWantingAdvertService {
     }
 
     public HousemateWantingAdvertResponse getHousemateWantingAdvert(Long id){
-        HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert not found!"));
+        HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         return HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert);
     }
 
@@ -47,11 +50,18 @@ public class HousemateWantingAdvertService {
         return housemateWantingAdverts.stream().map(housemateWantingAdvert -> HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert)).collect(Collectors.toList());
     }
 
+    public List<HousemateWantingAdvertResponse> getHousemateWantingAdvertPage(int pageNo, int size){
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
+        Page<HousemateWantingAdvert> housemateWantingAdvertPage = housemateWantingAdvertRepository.findAll(pageable);
+        List<HousemateWantingAdvert> housemateWantingAdvertList = housemateWantingAdvertPage.toList();
+        return housemateWantingAdvertList.stream().map(housemateWantingAdvert -> HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert)).collect(Collectors.toList());
+    }
+
     public void updateHousemateWantingAdvert(Long id, HousemateWantingAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User not found!"));
-        HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert not found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!housemateWantingAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this action!");
+            throw new UnauthorizedException();
         }
 
         housemateWantingAdvert.setTitle(body.getTitle());
@@ -65,10 +75,10 @@ public class HousemateWantingAdvertService {
     }
 
     public void deleteHousemateWantingAdvert(Long id){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User not found!"));
-        HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert not found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!housemateWantingAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this action!");
+            throw new UnauthorizedException();
         }
         housemateWantingAdvertRepository.deleteById(id);
     }

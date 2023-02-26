@@ -3,8 +3,8 @@ package com.undergraduate.server.service;
 
 import com.undergraduate.server.bucket.BucketName;
 import com.undergraduate.server.entity.User;
-import com.undergraduate.server.exception.BusinessException;
-import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.exception.ResourceNotFoundException;
+import com.undergraduate.server.exception.ResourceType;
 import com.undergraduate.server.model.request.UpdateUserRequest;
 import com.undergraduate.server.model.response.UserResponse;
 import com.undergraduate.server.repository.UserRepository;
@@ -41,16 +41,29 @@ public class UserService {
         return optionalUser;
     }
 
+    public Long getAuthenticatedUserId(){
+        return getAuthenticatedUser().get().getId();
+    }
+
     public UserResponse getUser(Long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.user_not_found, "User Not Found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         return UserResponse.fromEntity(user);
     }
 
+    public byte[] getUserProfilePhoto(Long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),user.getId()),user.getProfilePhotoUrl());
+    }
+
     public void updateUser(UpdateUserRequest body){
-        User user = getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"Kullanıcı bulunamadı."));
+        User user = getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         user.setName(body.getName());
         user.setUsername(body.getUsername());
         user.setEmail(body.getEmail());
+
+        if (user.getProfilePhotoUrl() != null){
+            imageStorageService.delete(BucketName.STORAGE_BUCKET.getBucketName(), String.format("%s/%s",user.getId(),user.getProfilePhotoUrl()));
+        }
 
         if (!body.getPhoto().isEmpty()){
             isImage(body.getPhoto());

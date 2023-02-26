@@ -33,6 +33,11 @@ public class HouseAdvertController {
         return houseAdvertService.getHouseAdverts();
     }
 
+    @GetMapping("/house-advert")
+    public List<HouseAdvertResponse> getHouseAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
+        return houseAdvertService.getHouseAdvertsPage(pageNo, size);
+    }
+
     @GetMapping("/house-advert/{id}/image/download")
     public byte[] getImageOfHouseAdvert(@PathVariable Long id, @RequestParam("filename") String filename){
         return houseAdvertService.getImageOfHouseAdvert(id, filename);

@@ -3,14 +3,17 @@ package com.undergraduate.server.service;
 import com.undergraduate.server.bucket.BucketName;
 import com.undergraduate.server.entity.HouseAdvert;
 import com.undergraduate.server.entity.User;
-import com.undergraduate.server.exception.BusinessException;
-import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.repository.HouseAdvertRepository;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +35,7 @@ public class HouseAdvertService {
     }
 
     public void createHouseAdvert(HouseAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User not found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HouseAdvert houseAdvert = new HouseAdvert();
         houseAdvert.setTitle(body.getTitle());
         houseAdvert.setDetail(body.getDetail());
@@ -59,7 +62,7 @@ public class HouseAdvertService {
                     imageUrls.add(filename);
                 }
                 catch (IOException e){
-                    throw new IllegalStateException(e);
+                    throw new FileUploadException();
                 }
             }
             houseAdvert.setImageUrls(imageUrls);
@@ -70,7 +73,7 @@ public class HouseAdvertService {
     }
 
     public HouseAdvertResponse getHouseAdvert(Long id){
-        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         return HouseAdvertResponse.fromEntity(houseAdvert);
     }
 
@@ -79,20 +82,27 @@ public class HouseAdvertService {
         return houseAdverts.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
     }
 
+    public List<HouseAdvertResponse> getHouseAdvertsPage(int pageNo, int size){
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
+        Page<HouseAdvert> houseAdvertPage = houseAdvertRepository.findAll(pageable);
+        List<HouseAdvert> houseAdvertList = houseAdvertPage.toList();
+        return houseAdvertList.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
+    }
+
     @Cacheable(value = "images", key = "#filename")
     public byte[] getImageOfHouseAdvert(Long id, String filename){
-        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!houseAdvert.getImageUrls().contains(filename)){
-            throw new IllegalStateException();
+            throw new ResourceNotFoundException(ResourceType.IMAGE);
         }
         return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),houseAdvert.getUser().getId()),filename);
     }
 
     public void updateHouseAdvert(Long id, HouseAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
-        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!houseAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this!");
+            throw new UnauthorizedException();
         }
 
         houseAdvert.setTitle(body.getTitle());
@@ -124,7 +134,7 @@ public class HouseAdvertService {
                     imageUrls.add(filename);
                 }
                 catch (IOException e){
-                    throw new IllegalStateException(e);
+                    throw new FileUploadException();
                 }
             }
             houseAdvert.setImageUrls(imageUrls);
@@ -134,10 +144,10 @@ public class HouseAdvertService {
     }
 
     public void deleteHouseAdvert(Long id){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
-        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!houseAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this!");
+            throw new UnauthorizedException();
         }
         if (!houseAdvert.getImageUrls().isEmpty()) {
             String[] urls = convertListToArray(user.getId(), houseAdvert.getImageUrls());
@@ -148,7 +158,7 @@ public class HouseAdvertService {
 
     private void isImage(MultipartFile file){
         if (!Arrays.asList(ContentType.IMAGE_PNG.getMimeType(), ContentType.IMAGE_JPEG.getMimeType()).contains(file.getContentType())){
-            throw new IllegalStateException("File(s) must be image.");
+            throw new NotAnImageException();
         }
     }
 

@@ -1,18 +1,21 @@
 package com.undergraduate.server.service;
 
-import com.amazonaws.AmazonServiceException;
 import com.undergraduate.server.bucket.BucketName;
 import com.undergraduate.server.entity.BelongingsAdvert;
 import com.undergraduate.server.entity.User;
-import com.undergraduate.server.exception.BusinessException;
-import com.undergraduate.server.exception.ErrorCode;
+import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.BelongingsAdvertRequest;
 import com.undergraduate.server.model.response.BelongingsAdvertResponse;
 import com.undergraduate.server.repository.BelongingsAdvertRepository;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,7 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class BelongingsAdvertService {
     private final BelongingsAdvertRepository belongingsAdvertRepository;
-
     private final ImageStorageService imageStorageService;
     private final UserService userService;
 
@@ -34,12 +36,11 @@ public class BelongingsAdvertService {
     }
 
     public void createBelongingsAdvert(BelongingsAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         BelongingsAdvert belongingsAdvert = new BelongingsAdvert();
         belongingsAdvert.setTitle(body.getTitle());
         belongingsAdvert.setDetail(body.getDetail());
         belongingsAdvert.setPrice(body.getPrice());
-        belongingsAdvert.setType(body.getType());
         belongingsAdvert.setType(body.getType());
         belongingsAdvert.setStatus(body.getStatus());
         belongingsAdvert.setShippable(body.isShippable());
@@ -68,7 +69,7 @@ public class BelongingsAdvertService {
     }
 
     public BelongingsAdvertResponse getBelongingsAdvert(Long id){
-        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         return BelongingsAdvertResponse.fromEntity(belongingsAdvert);
     }
 
@@ -77,18 +78,27 @@ public class BelongingsAdvertService {
         return belongingsAdverts.stream().map(belongingsAdvert -> BelongingsAdvertResponse.fromEntity(belongingsAdvert)).collect(Collectors.toList());
     }
 
+    public List<BelongingsAdvertResponse> getBelongingsAdvertPage(int pageNo, int size){
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
+        Page<BelongingsAdvert> belongingsAdvertPage = belongingsAdvertRepository.findAll(pageable);
+        List<BelongingsAdvert> belongingsAdvertList = belongingsAdvertPage.toList();
+        return belongingsAdvertList.stream().map(belongingsAdvert -> BelongingsAdvertResponse.fromEntity(belongingsAdvert)).collect(Collectors.toList());
+    }
+
     @Cacheable(value = "images", key = "#filename")
     public byte[] getImageOfBelongingsAdvert(Long id, String filename){
-        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
-        byte[] imageDownloaded = imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),belongingsAdvert.getUser().getId()),filename);
-        return imageDownloaded;
+        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
+        if (!belongingsAdvert.getImageUrls().contains(filename)){
+            throw new ResourceNotFoundException(ResourceType.IMAGE);
+        }
+        return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),belongingsAdvert.getUser().getId()),filename);
     }
 
     public void updateBelongingsAdvert(Long id, BelongingsAdvertRequest body){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
-        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!belongingsAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this action!");
+            throw new UnauthorizedException();
         }
 
         belongingsAdvert.setTitle(body.getTitle());
@@ -117,7 +127,7 @@ public class BelongingsAdvertService {
                     imageUrls.add(filename);
                 }
                 catch (IOException e){
-                    throw new IllegalStateException(e);
+                    throw new FileUploadException();
                 }
             }
             belongingsAdvert.setImageUrls(imageUrls);
@@ -127,10 +137,10 @@ public class BelongingsAdvertService {
     }
 
     public void deleteBelongingsAdvert(Long id){
-        User user = userService.getAuthenticatedUser().orElseThrow(() -> new BusinessException(ErrorCode.user_not_found,"User Not Found!"));
-        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.advert_not_found,"Advert Not Found!"));
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
         if (!belongingsAdvert.getUser().equals(user)){
-            throw new BusinessException(ErrorCode.unauthorized,"You are not authorized to do this action!");
+            throw new UnauthorizedException();
         }
 
         if (!belongingsAdvert.getImageUrls().isEmpty()){
@@ -143,7 +153,7 @@ public class BelongingsAdvertService {
 
     private void isImage(MultipartFile file){
         if (!Arrays.asList(ContentType.IMAGE_PNG.getMimeType(), ContentType.IMAGE_JPEG.getMimeType()).contains(file.getContentType())){
-            throw new IllegalStateException("File(s) must be image.");
+            throw new NotAnImageException();
         }
     }
 

@@ -3,6 +3,7 @@ package com.undergraduate.server.service;
 import com.undergraduate.server.entity.Role;
 import com.undergraduate.server.entity.User;
 import com.undergraduate.server.exception.*;
+import com.undergraduate.server.model.request.ChangePasswordRequest;
 import com.undergraduate.server.model.request.LoginRequest;
 import com.undergraduate.server.model.request.RegisterRequest;
 import com.undergraduate.server.model.response.AuthResponse;
@@ -15,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
+
 import java.util.Optional;
 
 @Service
@@ -41,15 +42,15 @@ public class AuthService {
         Optional<User> optionalUserByUsername = userRepository.findByUsername(body.getUsername());
         Optional<User> optionalUserByEmail = userRepository.findByEmail(body.getEmail());
         if (optionalUserByUsername.isPresent()){
-            throw new BusinessException(ErrorCode.user_already_exists,"User already exists.");
+            throw new UserAlreadyExistsException();
         }
 
         if (optionalUserByEmail.isPresent()){
-            throw new BusinessException(ErrorCode.email_already_taken,"Email has already taken.");
+            throw new EmailAlreadyTakenException();
         }
 
         if (!body.getPassword().equals(body.getPasswordRepeat())){
-            throw new BusinessException(ErrorCode.password_mismatch,"Passwords do not match.");
+            throw new PasswordMismatchException();
         }
 
         User user = new User();
@@ -67,7 +68,6 @@ public class AuthService {
         else if (body.getRole().equals("House Owner")){
             role = roleRepository.findByName("HOUSE_OWNER");
         }
-
         user.setRole(role);
 
         userRepository.save(user);
@@ -76,15 +76,24 @@ public class AuthService {
     public AuthResponse login(LoginRequest body){
         Optional<User> optionalUser = userRepository.findByUsername(body.getUsername());
         if (!optionalUser.isPresent()){
-            throw new BusinessException(ErrorCode.user_not_found,"User not found.");
+            throw new ResourceNotFoundException(ResourceType.USER);
         }
         if (!passwordEncoder.matches(body.getPassword(), optionalUser.get().getPassword())){
-            throw new BusinessException(ErrorCode.password_mismatch,"Passwords do not match.");
+            throw new PasswordMismatchException();
         }
         final UserDetails userDetails = userDetailsService.loadUserByUsername(body.getUsername());
         final String jwtToken = jwtUtil.createToken(userDetails);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public void changePassword(Long userId, ChangePasswordRequest body){
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        if (!passwordEncoder.matches(body.getOldPassword(), user.getPassword())){
+            throw new PasswordMismatchException();
+        }
+        user.setPassword(passwordEncoder.encode(body.getNewPassword()));
+        userRepository.save(user);
     }
 }

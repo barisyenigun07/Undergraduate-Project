@@ -32,6 +32,11 @@ public class BelongingsAdvertController {
         return belongingsAdvertService.getBelongingsAdverts();
     }
 
+    @GetMapping("/belongings-advert")
+    public List<BelongingsAdvertResponse> getBelongingsAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
+        return belongingsAdvertService.getBelongingsAdvertPage(pageNo, size);
+    }
+
     @GetMapping("/belongings-advert/{id}/image/download")
     public byte[] getImageOfBelongingsAdvert(@PathVariable Long id, @RequestParam("filename") String filename){
         return belongingsAdvertService.getImageOfBelongingsAdvert(id, filename);
