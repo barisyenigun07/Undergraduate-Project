@@ -18,7 +18,7 @@ import {
 import { useFormik } from "formik";
 import validationSchema from "./validations";
 
-import { fetchRegister } from "../../../api";
+import { register } from "../../../api";
 
 const Register = () => {
   const formik = useFormik({
@@ -34,7 +34,7 @@ const Register = () => {
     validationSchema,
     onSubmit: async (values, bag) => {
       try {
-        const registerResponse = await fetchRegister(values);
+        const registerResponse = await register(values);
         console.log(values);
       } catch (error) {
         bag.setErrors({ general: error.response.data.message });

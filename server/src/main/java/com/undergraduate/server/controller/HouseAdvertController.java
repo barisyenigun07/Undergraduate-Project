@@ -33,7 +33,7 @@ public class HouseAdvertController {
         return houseAdvertService.getHouseAdverts();
     }
 
-    @GetMapping("/house-advert")
+    @GetMapping("/house-advert/page")
     public List<HouseAdvertResponse> getHouseAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
         return houseAdvertService.getHouseAdvertsPage(pageNo, size);
     }

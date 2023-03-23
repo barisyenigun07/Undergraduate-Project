@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @ToString
@@ -15,6 +15,7 @@ public class BelongingsAdvertResponse {
     private Long id;
     private String title;
     private String detail;
+    private LocalDate publishedDate;
     private double price;
     private String type;
     private String status;
@@ -28,6 +29,7 @@ public class BelongingsAdvertResponse {
                 .id(belongingsAdvert.getId())
                 .title(belongingsAdvert.getTitle())
                 .detail(belongingsAdvert.getDetail())
+                .publishedDate(belongingsAdvert.getPublishedDate())
                 .price(belongingsAdvert.getPrice())
                 .type(belongingsAdvert.getType())
                 .status(belongingsAdvert.getStatus())

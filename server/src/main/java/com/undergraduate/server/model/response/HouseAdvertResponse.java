@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @ToString
@@ -15,6 +15,7 @@ public class HouseAdvertResponse {
     private Long id;
     private String title;
     private String detail;
+    private LocalDate publishedDate;
     private double price;
     private String roomCount;
     private double area;
@@ -33,6 +34,7 @@ public class HouseAdvertResponse {
                 .id(houseAdvert.getId())
                 .title(houseAdvert.getTitle())
                 .detail(houseAdvert.getDetail())
+                .publishedDate(houseAdvert.getPublishedDate())
                 .price(houseAdvert.getPrice())
                 .roomCount(houseAdvert.getRoomCount())
                 .area(houseAdvert.getArea())

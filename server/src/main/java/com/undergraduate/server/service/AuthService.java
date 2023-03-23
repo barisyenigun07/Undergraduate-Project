@@ -25,7 +25,6 @@ public class AuthService {
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
-
     private RoleRepository roleRepository;
 
     @Autowired
@@ -41,6 +40,7 @@ public class AuthService {
     public void register(RegisterRequest body){
         Optional<User> optionalUserByUsername = userRepository.findByUsername(body.getUsername());
         Optional<User> optionalUserByEmail = userRepository.findByEmail(body.getEmail());
+
         if (optionalUserByUsername.isPresent()){
             throw new UserAlreadyExistsException();
         }

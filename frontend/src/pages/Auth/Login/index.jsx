@@ -11,8 +11,11 @@ import {
   Divider,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import EmailIcon from "@mui/icons-material/Email";
+import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
+import { useFormik } from "formik";
+import { login } from "../../../api";
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -23,6 +26,23 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Login = () => {
+  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: ""
+    },
+    
+    onSubmit: async (values) => {
+      try {
+        await login(values);
+        navigate("/home");
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
+  })
   return (
     <>
       <Grid container spacing={2}>
@@ -64,17 +84,22 @@ const Login = () => {
                 <br /> <br />
                 <br /> <br />
               </Box>
+              <form onSubmit={formik.handleSubmit}>
               <Box sx={{ px: 8 }}>
                 <TextField
-                  id="outlined-basic"
-                  label="Email"
+                  id="username-textfield"
+                  label="Username"
                   variant="outlined"
                   size="small"
+                  name="username"
+                  type={"text"}
+                  onChange={formik.handleChange}
+                  value={formik.values.username}
                   sx={{ width: 1 }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon />
+                        <PersonIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -82,11 +107,15 @@ const Login = () => {
               </Box>
               <Box sx={{ px: 8 }}>
                 <TextField
-                  id="outlined-basic"
+                  id="password-textfield"
                   label="Password"
                   variant="outlined"
                   size="small"
+                  name="password"
+                  type={"password"}
                   sx={{ width: 1 }}
+                  onChange={formik.handleChange}
+                  value={formik.values.password}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -110,7 +139,7 @@ const Login = () => {
 
               <Box sx={{ px: 8 }}>
                 <Button
-                  href="/login"
+                  type="submit"
                   variant="contained"
                   sx={{
                     borderRadius: 5,
@@ -124,7 +153,10 @@ const Login = () => {
                 >
                   Login
                 </Button>
-              </Box>
+              </Box>  
+              </form>
+              
+  
               <Divider>Or</Divider>
 
               <Box sx={{ px: 8 }}>

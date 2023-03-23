@@ -32,7 +32,7 @@ public class BelongingsAdvertController {
         return belongingsAdvertService.getBelongingsAdverts();
     }
 
-    @GetMapping("/belongings-advert")
+    @GetMapping("/belongings-advert/page")
     public List<BelongingsAdvertResponse> getBelongingsAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
         return belongingsAdvertService.getBelongingsAdvertPage(pageNo, size);
     }

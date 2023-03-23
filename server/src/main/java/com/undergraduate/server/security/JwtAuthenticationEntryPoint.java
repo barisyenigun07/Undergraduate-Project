@@ -1,4 +1,4 @@
-package com.undergraduate.server.util;
+package com.undergraduate.server.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

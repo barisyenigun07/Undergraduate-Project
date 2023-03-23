@@ -21,6 +21,11 @@ public class UserController {
         return userService.getUser(id);
     }
 
+    @GetMapping("/user/auth")
+    public UserResponse getAuthUser(){
+        return userService.getUser(userService.getAuthenticatedUserId());
+    }
+
     @GetMapping("/user/{id}/image/download")
     public byte[] getUserProfilePhoto(@PathVariable Long id){
         return userService.getUserProfilePhoto(id);

@@ -1,25 +1,28 @@
 package com.undergraduate.server.service;
 
 
+
 import com.undergraduate.server.bucket.BucketName;
 import com.undergraduate.server.entity.User;
+import com.undergraduate.server.exception.FileUploadException;
 import com.undergraduate.server.exception.ResourceNotFoundException;
 import com.undergraduate.server.exception.ResourceType;
 import com.undergraduate.server.model.request.UpdateUserRequest;
 import com.undergraduate.server.model.response.UserResponse;
 import com.undergraduate.server.repository.UserRepository;
-import org.apache.http.entity.ContentType;
+import com.undergraduate.server.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
 
 @Service
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -61,13 +64,12 @@ public class UserService {
         user.setUsername(body.getUsername());
         user.setEmail(body.getEmail());
 
-        if (user.getProfilePhotoUrl() != null){
-            imageStorageService.delete(BucketName.STORAGE_BUCKET.getBucketName(), String.format("%s/%s",user.getId(),user.getProfilePhotoUrl()));
-        }
-
         if (!body.getPhoto().isEmpty()){
-            isImage(body.getPhoto());
-            Map<String, String> metadata = extractMetadata(body.getPhoto());
+            if (user.getProfilePhotoUrl() != null){
+                imageStorageService.delete(BucketName.STORAGE_BUCKET.getBucketName(), String.format("%s/%s",user.getId(),user.getProfilePhotoUrl()));
+            }
+            ImageUtil.isImage(body.getPhoto());
+            Map<String, String> metadata = ImageUtil.extractMetadata(body.getPhoto());
             String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(),user.getId());
             String filename = String.format("%s-%s",body.getPhoto().getOriginalFilename(), UUID.randomUUID());
             try {
@@ -75,23 +77,10 @@ public class UserService {
                 user.setProfilePhotoUrl(filename);
             }
             catch (IOException e){
-                throw new IllegalStateException();
+                throw new FileUploadException();
             }
         }
 
         userRepository.save(user);
-    }
-
-    private void isImage(MultipartFile file){
-        if (!Arrays.asList(ContentType.IMAGE_PNG.getMimeType(), ContentType.IMAGE_JPEG.getMimeType()).contains(file.getContentType())){
-            throw new IllegalStateException("File(s) must be image.");
-        }
-    }
-
-    private Map<String, String> extractMetadata(MultipartFile file){
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type",file.getContentType());
-        metadata.put("Content-Length",String.valueOf(file.getSize()));
-        return metadata;
     }
 }

@@ -26,10 +26,7 @@ public class BelongingsAdvert extends Advert{
     @Column(name = "is_exchangeable",nullable = false)
     private boolean isExchangeable;
     @ElementCollection
-    @CollectionTable(
-            name = "belongings_image",
-            joinColumns = @JoinColumn(name = "advert_id")
-    )
+    @CollectionTable(name = "belongings_image", joinColumns = @JoinColumn(name = "advert_id"))
     @Column(name = "image_url")
     private List<String> imageUrls;
 }

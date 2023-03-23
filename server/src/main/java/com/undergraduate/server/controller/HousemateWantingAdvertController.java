@@ -32,7 +32,7 @@ public class HousemateWantingAdvertController {
         return housemateWantingAdvertService.getHousemateWantingAdverts();
     }
 
-    @GetMapping("/housemate-wanting-advert")
+    @GetMapping("/housemate-wanting-advert/page")
     public List<HousemateWantingAdvertResponse> getHousemateWantingAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
         return housemateWantingAdvertService.getHousemateWantingAdvertPage(pageNo, size);
     }

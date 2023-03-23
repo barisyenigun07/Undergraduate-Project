@@ -23,6 +23,7 @@ import img1 from "../../../src/Component1.svg";
 import { ReactComponent as ReactLogo } from "../../../src/Component1.svg";
 
 import { maxWidth } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Anasayfa", "Satılık İlanlar", "İlan Ver", "Bize Ulaş"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -47,6 +48,7 @@ const advertType = [
 function ResponsiveAppBar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -136,12 +138,14 @@ function ResponsiveAppBar() {
                     <Button
                       variant="contained"
                       sx={{ backgroundColor: "#8E1904" }}
+                      onClick={() => {navigate("/login")}}
                     >
                       Login
                     </Button>
                     <Button
                       variant="contained"
                       sx={{ backgroundColor: "#8E1904" }}
+                      onClick={() => {navigate("/register")}}
                     >
                       Register
                     </Button>

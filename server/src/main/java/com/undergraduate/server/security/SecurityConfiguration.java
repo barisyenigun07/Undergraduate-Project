@@ -1,6 +1,5 @@
 package com.undergraduate.server.security;
 
-import com.undergraduate.server.util.JwtAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -50,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers(HttpMethod.GET,"/house-advert/**","/housemate-searching-advert/**","/housemate-wanting-advert/**","belongings-advert/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/house-advert/**","/housemate-searching-advert/**","/housemate-wanting-advert/**","/belongings-advert/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/house-advert/**").hasAnyAuthority("HOUSE_OWNER")
                 .antMatchers(HttpMethod.PUT, "/house-advert/**").hasAnyAuthority("HOUSE_OWNER")
                 .antMatchers(HttpMethod.DELETE, "/house-advert/**").hasAnyAuthority("HOUSE_OWNER")

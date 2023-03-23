@@ -7,7 +7,7 @@ import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.repository.HouseAdvertRepository;
-import org.apache.http.entity.ContentType;
+import com.undergraduate.server.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class HouseAdvertService {
     private final HouseAdvertRepository houseAdvertRepository;
     private final ImageStorageService imageStorageService;
@@ -53,8 +55,8 @@ public class HouseAdvertService {
         if (body.getPhotos().size() > 0){
             List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : body.getPhotos()){
-                isImage(file);
-                Map<String, String> metadata = extractMetadata(file);
+                ImageUtil.isImage(file);
+                Map<String, String> metadata = ImageUtil.extractMetadata(file);
                 String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), user.getId());
                 String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
                 try {
@@ -118,15 +120,15 @@ public class HouseAdvertService {
         houseAdvert.setDues(body.getDues());
 
         if (!houseAdvert.getImageUrls().isEmpty()){
-            String[] urls = convertListToArray(user.getId(), houseAdvert.getImageUrls());
+            String[] urls = ImageUtil.convertListToArray(user.getId(), houseAdvert.getImageUrls());
             imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(),urls);
         }
 
         if (body.getPhotos().size() > 0){
             List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : body.getPhotos()){
-                isImage(file);
-                Map<String, String> metadata = extractMetadata(file);
+                ImageUtil.isImage(file);
+                Map<String, String> metadata = ImageUtil.extractMetadata(file);
                 String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), user.getId());
                 String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
                 try {
@@ -150,31 +152,9 @@ public class HouseAdvertService {
             throw new UnauthorizedException();
         }
         if (!houseAdvert.getImageUrls().isEmpty()) {
-            String[] urls = convertListToArray(user.getId(), houseAdvert.getImageUrls());
+            String[] urls = ImageUtil.convertListToArray(user.getId(), houseAdvert.getImageUrls());
             imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(), urls);
         }
         houseAdvertRepository.deleteById(id);
     }
-
-    private void isImage(MultipartFile file){
-        if (!Arrays.asList(ContentType.IMAGE_PNG.getMimeType(), ContentType.IMAGE_JPEG.getMimeType()).contains(file.getContentType())){
-            throw new NotAnImageException();
-        }
-    }
-
-    private Map<String, String> extractMetadata(MultipartFile file){
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type",file.getContentType());
-        metadata.put("Content-Length",String.valueOf(file.getSize()));
-        return metadata;
-    }
-
-    private String[] convertListToArray(long userId, List<String> urls){
-        String[] arr = new String[urls.size()];
-        for (int i = 0;i < arr.length;i++){
-            arr[i] = String.format("%s/%s",userId,urls.get(i));
-        }
-        return arr;
-    }
-
 }

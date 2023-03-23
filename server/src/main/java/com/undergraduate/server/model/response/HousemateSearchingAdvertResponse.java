@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import java.time.LocalDate;
+
 @Data
 @ToString
 @Builder
@@ -12,6 +14,7 @@ public class HousemateSearchingAdvertResponse {
     private Long id;
     private String title;
     private String detail;
+    private LocalDate publishedDate;
     private double monthlyRentFee;
     private String houseType;
     private String roomCount;
@@ -27,6 +30,7 @@ public class HousemateSearchingAdvertResponse {
                 .id(housemateSearchingAdvert.getId())
                 .title(housemateSearchingAdvert.getTitle())
                 .detail(housemateSearchingAdvert.getDetail())
+                .publishedDate(housemateSearchingAdvert.getPublishedDate())
                 .monthlyRentFee(housemateSearchingAdvert.getMonthlyRentFee())
                 .houseType(housemateSearchingAdvert.getHouseType())
                 .roomCount(housemateSearchingAdvert.getRoomCount())
