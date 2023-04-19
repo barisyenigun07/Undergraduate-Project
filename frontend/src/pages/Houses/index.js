@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Home from "../Home/index.js";
 import Card from "../../components/Card/";
+import { getHouseAdvertPage } from "../../api/houseAdvert.api.js";
 
 const index = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -16,10 +17,9 @@ const index = () => {
   // if (error) return 'An error has occurred: ' + error.message
 
   // console.log(data);
-
   return (
     <div>
-      <Home />
+      <Home/>
     </div>
   );
 };

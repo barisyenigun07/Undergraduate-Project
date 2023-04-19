@@ -18,9 +18,11 @@ import {
 import { useFormik } from "formik";
 import validationSchema from "./validations";
 
-import { register } from "../../../api";
+import { register } from "../../../api/auth.api";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -34,8 +36,8 @@ const Register = () => {
     validationSchema,
     onSubmit: async (values, bag) => {
       try {
-        const registerResponse = await register(values);
-        console.log(values);
+        await register(values);
+        navigate("/login");
       } catch (error) {
         bag.setErrors({ general: error.response.data.message });
       }

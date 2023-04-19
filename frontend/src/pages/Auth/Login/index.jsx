@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { useFormik } from "formik";
-import { login } from "../../../api";
+import { login } from "../../../api/auth.api";
 import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -35,7 +35,9 @@ const Login = () => {
     
     onSubmit: async (values) => {
       try {
-        await login(values);
+        
+        const jwtDataResponse = await login(values);
+        sessionStorage.setItem("token" ,jwtDataResponse.token);
         navigate("/home");
       }
       catch (error) {
