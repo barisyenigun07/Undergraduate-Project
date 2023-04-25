@@ -12,15 +12,14 @@ const HouseCard = ({item}) => {
       <CardMedia
         component="img"
         alt="item"
-        image="/static/images/cards/contemplative-reptile.jpg"
+        image={`http://localhost:8080/house-advert/${item.id}/image/download?filename=${item.imageUrls[0]}`}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-            Brand New Appartments
+            {item.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
+            {item.detail}
         </Typography>
       </CardContent>
       <CardActions>
