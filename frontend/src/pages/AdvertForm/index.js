@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { getHouseAdvertPage } from '../../api/houseAdvert.api';
 
 const AdvertForm = () => {
   const [advertType, setAdvertType] = useState("");
   const [title, setTitle] = useState("");
   const [detail, setDetail] = useState("");
-
   return (
     <div>
         <select>

@@ -55,7 +55,7 @@ public class UserService {
 
     public byte[] getUserProfilePhoto(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
-        return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),user.getId()),user.getProfilePhotoUrl());
+        return imageStorageService.download(String.format("%s/user-profile-photo",BucketName.STORAGE_BUCKET.getBucketName()),user.getProfilePhotoUrl());
     }
 
     public void updateUser(UpdateUserRequest body){
@@ -63,6 +63,7 @@ public class UserService {
         user.setName(body.getName());
         user.setUsername(body.getUsername());
         user.setEmail(body.getEmail());
+        user.setContactInfo(body.getContactInfo());
 
         if (!body.getPhoto().isEmpty()){
             if (user.getProfilePhotoUrl() != null){
@@ -70,8 +71,8 @@ public class UserService {
             }
             ImageUtil.isImage(body.getPhoto());
             Map<String, String> metadata = ImageUtil.extractMetadata(body.getPhoto());
-            String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(),user.getId());
-            String filename = String.format("%s-%s",body.getPhoto().getOriginalFilename(), UUID.randomUUID());
+            String path = String.format("%s/user-profile-photo", BucketName.STORAGE_BUCKET.getBucketName());
+            String filename = String.format("%s-%s",UUID.randomUUID(), body.getPhoto().getOriginalFilename());
             try {
                 imageStorageService.upload(path, filename, Optional.of(metadata), body.getPhoto().getInputStream());
                 user.setProfilePhotoUrl(filename);

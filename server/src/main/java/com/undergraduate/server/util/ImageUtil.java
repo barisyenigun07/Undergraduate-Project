@@ -23,10 +23,10 @@ public class ImageUtil {
         return metadata;
     }
 
-    public static String[] convertListToArray(long userId, List<String> urls){
+    public static String[] convertListToArray(String prefix, List<String> urls){
         String[] arr = new String[urls.size()];
         for (int i = 0;i < arr.length; i++){
-            arr[i] = String.format("%s/%s", userId, urls.get(i));
+            arr[i] = String.format("%s/%s", prefix, urls.get(i));
         }
         return arr;
     }

@@ -1,11 +1,19 @@
 import axios from 'axios';
+import getToken from '../util/getToken';
 
-const token = sessionStorage.getItem("token");
+
+const token = getToken();
 
 export const createHouseAdvert = async (data) => {
     axios.post("/house-advert", data, {headers: {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}})
          .catch(err => {throw err});
     
+}
+
+export const getHouseAdverts = () => {
+    return axios.get("/house-advert")
+                .then(res => res.data)
+                .catch(err => {throw err});
 }
 
 export const getHouseAdvertPage = async (page = 0, size = 10) => {

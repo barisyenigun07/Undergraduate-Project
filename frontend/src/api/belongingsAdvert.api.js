@@ -1,7 +1,7 @@
 
 import axios from 'axios';
-
-const token = sessionStorage.getItem("token");
+import getToken from '../util/getToken';
+const token = getToken();
 
 export const createBelongingsAdvert = async (formData) => {
     axios.post("/belongings-advert", formData, {headers: {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}})

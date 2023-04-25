@@ -31,7 +31,7 @@ public class UserController {
         return userService.getUserProfilePhoto(id);
     }
 
-    @PutMapping("/user/me")
+    @PutMapping("/user/update")
     public void updateUser(@ModelAttribute UpdateUserRequest body){
         userService.updateUser(body);
     }

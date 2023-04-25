@@ -24,6 +24,7 @@ import { ReactComponent as ReactLogo } from "../../../src/Component1.svg";
 
 import { maxWidth } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { getHouseAdverts } from "../../api/houseAdvert.api";
 
 const pages = ["Anasayfa", "Satılık İlanlar", "İlan Ver", "Bize Ulaş"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -50,6 +51,17 @@ function ResponsiveAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
 
+  const [houseAdverts, setHouseAdverts] = React.useState([]);
+
+  const getHouseAds = async () => {
+    try {
+      const houseAds = await getHouseAdverts();
+      setHouseAdverts(houseAds);
+    } catch (error) {
+      alert(error);
+    }
+  }
+  
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -61,6 +73,10 @@ function ResponsiveAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  React.useEffect(() => {
+    getHouseAds();
+  }, []);
   return (
     <>
       <Box className="backgroundMain">
@@ -365,16 +381,9 @@ function ResponsiveAppBar() {
           p: 2,
         }}
       >
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {houseAdverts.map(houseAdvert => 
+          <Card item={houseAdvert}/>
+        )}
       </Box>
 
       <Paper

@@ -57,8 +57,8 @@ public class HouseAdvertService {
             for (MultipartFile file : body.getPhotos()){
                 ImageUtil.isImage(file);
                 Map<String, String> metadata = ImageUtil.extractMetadata(file);
-                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), user.getId());
-                String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
+                String path = String.format("%s/house-advert", BucketName.STORAGE_BUCKET.getBucketName());
+                String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
                     imageUrls.add(filename);
@@ -97,7 +97,7 @@ public class HouseAdvertService {
         if (!houseAdvert.getImageUrls().contains(filename)){
             throw new ResourceNotFoundException(ResourceType.IMAGE);
         }
-        return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),houseAdvert.getUser().getId()),filename);
+        return imageStorageService.download(String.format("%s/house-advert",BucketName.STORAGE_BUCKET.getBucketName()),filename);
     }
 
     public void updateHouseAdvert(Long id, HouseAdvertRequest body){
@@ -120,7 +120,7 @@ public class HouseAdvertService {
         houseAdvert.setDues(body.getDues());
 
         if (!houseAdvert.getImageUrls().isEmpty()){
-            String[] urls = ImageUtil.convertListToArray(user.getId(), houseAdvert.getImageUrls());
+            String[] urls = ImageUtil.convertListToArray("house-advert", houseAdvert.getImageUrls());
             imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(),urls);
         }
 
@@ -129,8 +129,8 @@ public class HouseAdvertService {
             for (MultipartFile file : body.getPhotos()){
                 ImageUtil.isImage(file);
                 Map<String, String> metadata = ImageUtil.extractMetadata(file);
-                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(), user.getId());
-                String filename = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
+                String path = String.format("%s/house-advert", BucketName.STORAGE_BUCKET.getBucketName());
+                String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
                     imageUrls.add(filename);
@@ -152,7 +152,7 @@ public class HouseAdvertService {
             throw new UnauthorizedException();
         }
         if (!houseAdvert.getImageUrls().isEmpty()) {
-            String[] urls = ImageUtil.convertListToArray(user.getId(), houseAdvert.getImageUrls());
+            String[] urls = ImageUtil.convertListToArray("house-advert", houseAdvert.getImageUrls());
             imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(), urls);
         }
         houseAdvertRepository.deleteById(id);

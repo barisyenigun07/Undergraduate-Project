@@ -1,6 +1,7 @@
 import axios from "axios";
+import getToken from "../util/getToken";
 
-const token = sessionStorage.getItem("token");
+const token = getToken();
 
 export const getAuthUser = async () => {
     return axios.get("/user/auth", {headers: {Authorization: `Bearer ${token}`}})

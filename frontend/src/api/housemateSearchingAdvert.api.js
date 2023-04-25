@@ -1,6 +1,7 @@
 import axios from 'axios';
+import getToken from '../util/getToken';
 
-const token = sessionStorage.getItem("token");
+const token = getToken();
 
 export const createHousemateSearchingAdvert = async (data) => {
     axios.post("/housemate-searching-advert", data, {headers: {Authorization: `Bearer ${token}`}})

@@ -53,14 +53,14 @@ public class BelongingsAdvertService {
             for (MultipartFile file : body.getPhotos()){
                 ImageUtil.isImage(file);
                 Map<String, String> metadata = ImageUtil.extractMetadata(file);
-                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(),user.getId());
-                String filename = String.format("%s-%s",file.getOriginalFilename(),UUID.randomUUID());
+                String path = String.format("%s/belongings-advert", BucketName.STORAGE_BUCKET.getBucketName());
+                String filename = String.format("%s-%s",UUID.randomUUID(),file.getOriginalFilename());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
                     imageUrls.add(filename);
                 }
                 catch (IOException e){
-                    throw new IllegalStateException(e);
+                    throw new FileUploadException();
                 }
             }
             belongingsAdvert.setImageUrls(imageUrls);
@@ -92,7 +92,7 @@ public class BelongingsAdvertService {
         if (!belongingsAdvert.getImageUrls().contains(filename)){
             throw new ResourceNotFoundException(ResourceType.IMAGE);
         }
-        return imageStorageService.download(String.format("%s/%s",BucketName.STORAGE_BUCKET.getBucketName(),belongingsAdvert.getUser().getId()),filename);
+        return imageStorageService.download(String.format("%s/belongings-advert",BucketName.STORAGE_BUCKET.getBucketName()),filename);
     }
 
     public void updateBelongingsAdvert(Long id, BelongingsAdvertRequest body){
@@ -111,7 +111,7 @@ public class BelongingsAdvertService {
         belongingsAdvert.setExchangeable(body.isExchangeable());
 
         if (!belongingsAdvert.getImageUrls().isEmpty()){
-            String[] urls = ImageUtil.convertListToArray(user.getId(), belongingsAdvert.getImageUrls());
+            String[] urls = ImageUtil.convertListToArray("belongings-advert", belongingsAdvert.getImageUrls());
             imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(), urls);
         }
 
@@ -120,8 +120,8 @@ public class BelongingsAdvertService {
             for (MultipartFile file : body.getPhotos()){
                 ImageUtil.isImage(file);
                 Map<String, String> metadata = ImageUtil.extractMetadata(file);
-                String path = String.format("%s/%s", BucketName.STORAGE_BUCKET.getBucketName(),user.getId());
-                String filename = String.format("%s-%s",file.getOriginalFilename(),UUID.randomUUID());
+                String path = String.format("%s/belongings-advert", BucketName.STORAGE_BUCKET.getBucketName());
+                String filename = String.format("%s-%s",UUID.randomUUID(),file.getOriginalFilename());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
                     imageUrls.add(filename);
@@ -144,7 +144,7 @@ public class BelongingsAdvertService {
         }
 
         if (!belongingsAdvert.getImageUrls().isEmpty()){
-            String[] urls = ImageUtil.convertListToArray(user.getId(), belongingsAdvert.getImageUrls());
+            String[] urls = ImageUtil.convertListToArray("belongings-advert", belongingsAdvert.getImageUrls());
             imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(), urls);
         }
 

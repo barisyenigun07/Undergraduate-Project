@@ -1,6 +1,7 @@
 import axios from 'axios';
+import getToken from '../util/getToken';
 
-const token = sessionStorage.getItem("token");
+const token = getToken();
 
 export const register = async (data) => {
     axios.post("/register", data)

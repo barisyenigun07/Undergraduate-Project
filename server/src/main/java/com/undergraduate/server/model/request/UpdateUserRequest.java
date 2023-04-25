@@ -10,5 +10,6 @@ public class UpdateUserRequest {
     private String name;
     private String username;
     private String email;
+    private String contactInfo;
     private MultipartFile photo;
 }
