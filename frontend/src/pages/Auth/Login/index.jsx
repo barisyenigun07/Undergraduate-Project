@@ -36,9 +36,9 @@ const Login = () => {
     onSubmit: async (values) => {
       try {
         
-        const jwtDataResponse = await login(values);
-        sessionStorage.setItem("token" ,jwtDataResponse.token);
+        await login(values);
         navigate("/home");
+        //window.location.reload();
       }
       catch (error) {
         console.log(error);
@@ -97,7 +97,7 @@ const Login = () => {
                   type={"text"}
                   onChange={formik.handleChange}
                   value={formik.values.username}
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -107,7 +107,7 @@ const Login = () => {
                   }}
                 />
               </Box>
-              <Box sx={{ px: 8 }}>
+              <Box sx={{ px: 8, mt: 2 }}>
                 <TextField
                   id="password-textfield"
                   label="Password"
@@ -115,7 +115,7 @@ const Login = () => {
                   size="small"
                   name="password"
                   type={"password"}
-                  sx={{ width: 1 }}
+                  sx={{ width: 1, maxWidth: "540px" }}
                   onChange={formik.handleChange}
                   value={formik.values.password}
                   InputProps={{

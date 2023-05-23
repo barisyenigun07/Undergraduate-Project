@@ -1,1 +1,1 @@
-export default () => window.sessionStorage.getItem("token") ?? null;
+export default () => localStorage.getItem("token") ?? null;

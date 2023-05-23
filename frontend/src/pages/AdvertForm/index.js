@@ -1,17 +1,20 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { getHouseAdvertPage } from '../../api/houseAdvert.api';
+import { useFormik } from 'formik';
 
 const AdvertForm = () => {
-  const [advertType, setAdvertType] = useState("");
-  const [title, setTitle] = useState("");
-  const [detail, setDetail] = useState("");
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      detail: ""
+    }
+  })
   return (
-    <div>
-        <select>
-          <option></option>
-        </select>
-    </div>
+    <>
+      <Box flexDirection={"row"}>
+        
+      </Box>  
+    </>
   )
 }
 

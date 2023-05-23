@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.8",
+    "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -16,8 +17,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.5.0",
     "react-scripts": "^5.0.1",
+    "redux": "^4.2.1",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
@@ -50,5 +53,5 @@
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1"
   },
-  "proxy" : "http://localhost:8080"
+  "proxy": "http://localhost:8080"
 }

@@ -4,13 +4,13 @@ import getToken from '../util/getToken';
 
 const token = getToken();
 
-export const createHouseAdvert = async (data) => {
-    axios.post("/house-advert", data, {headers: {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}})
+export const createHouseAdvert = async (formData) => {
+    axios.post("/house-advert", formData, {headers: {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}})
          .catch(err => {throw err});
     
 }
 
-export const getHouseAdverts = () => {
+export const getHouseAdverts = async () => {
     return axios.get("/house-advert")
                 .then(res => res.data)
                 .catch(err => {throw err});
@@ -32,6 +32,11 @@ export const updateHouseAdvert = async (id, data) => {
     axios.put(`/house-advert/${id}`, data, {headers: {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}})
          .catch(err => {throw err});
     
+}
+
+export const deleteHouseAdvertImage = async (id, filename) => {
+    axios.put(`/house-advert/${id}/image/delete?filename=${filename}`, {headers: {Authorization: `Bearer ${token}`}})
+         .catch(err => {throw err});
 }
 
 export const deleteHouseAdvert = async (id) => {

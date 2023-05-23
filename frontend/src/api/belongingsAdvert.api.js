@@ -25,6 +25,11 @@ export const updateBelongingsAdvert = async (id, formData) => {
          .catch(err => {throw err});
 }
 
+export const deleteBelongingsAdvertImage = async (id, filename) => {
+    axios.put(`/belongings-advert/${id}`, {headers: {Authorization: `Bearer ${token}`}})
+         .catch(err => {throw err});
+}
+
 export const deleteBelongingsAdvert = async (id) => {
     axios.delete(`/belongings-advert/${id}`, {headers: {Authorization: `Bearer ${token}`}})
          .catch(err => {throw err});

@@ -14,9 +14,10 @@ import {
   TextField,
   Paper,
   Container,
+  Avatar,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Card from "../../components/Card";
+
 
 import bg from "../../../src/bg-logo.jpg";
 import img1 from "../../../src/Component1.svg";
@@ -25,8 +26,11 @@ import { ReactComponent as ReactLogo } from "../../../src/Component1.svg";
 import { maxWidth } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { getHouseAdverts } from "../../api/houseAdvert.api";
+import { getAuthUser } from "../../api/user.api";
+import HouseCard from "./../../components/Card/HouseAdvertCard/index"
+import getToken from "../../util/getToken";
 
-const pages = ["Anasayfa", "Satılık İlanlar", "İlan Ver", "Bize Ulaş"];
+const pages = ["Anasayfa", "İlan Ver", "Bize Ulaş"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const advertType = [
   {
@@ -46,8 +50,10 @@ const advertType = [
     label: "Ev Arkadasi İlanları",
   },
 ];
-function ResponsiveAppBar() {
-  const [auth, setAuth] = React.useState(true);
+function HomePage() {
+  const token = getToken();
+  const [auth, setAuth] = React.useState(false);
+  const [authUser, setAuthUser] = React.useState({});
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
 
@@ -59,6 +65,20 @@ function ResponsiveAppBar() {
       setHouseAdverts(houseAds);
     } catch (error) {
       alert(error);
+    }
+  }
+
+  const getAuthenticatedUser = async () => {
+    try {
+      if (token) {
+        const user = await getAuthUser();
+        setAuthUser(user);
+        setAuth(true);
+      }
+    }
+    catch (err) {
+      setAuth(false);
+      //navigate("/login");
     }
   }
   
@@ -75,6 +95,7 @@ function ResponsiveAppBar() {
   };
 
   React.useEffect(() => {
+    getAuthenticatedUser();
     getHouseAds();
   }, []);
   return (
@@ -125,7 +146,7 @@ function ResponsiveAppBar() {
                       onClick={handleMenu}
                       color="inherit"
                     >
-                      <AccountCircle />
+                      {authUser?.profilePhotoUrl == null ? <AccountCircle/> : <Avatar alt={`${authUser?.username}`} src={`http://localhost:8080/user/${authUser?.id}/image/download`}/>}
                     </IconButton>
                     <Menu
                       id="menu-appbar"
@@ -143,7 +164,7 @@ function ResponsiveAppBar() {
                       onClose={handleClose}
                     >
                       {settings.map((setting) => (
-                        <MenuItem key={setting}>
+                        <MenuItem key={setting} onClick={() => navigate(`/${setting}`)}>
                           <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                       ))}
@@ -177,7 +198,7 @@ function ResponsiveAppBar() {
             variant="h1"
             component="h2"
           >
-            Find Your Home/Housemate/Stuff <br />
+            Find Your House/Housemate/Stuff <br />
             What You Need
           </Typography>
           <Box sx={{ mt: 8 }}>
@@ -314,22 +335,6 @@ function ResponsiveAppBar() {
         </Box>
       </Box>
 
-      {
-        //bu aşağıdaki kısım silinecek
-      }
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? "Logout" : "Login"}
-        />
-      </FormGroup>
-
       <Box sx={{ p: 2, textAlign: "center" }}>
         <Typography
           sx={{ fontSize: "24px", fontWeight: "bold" }}
@@ -382,7 +387,7 @@ function ResponsiveAppBar() {
         }}
       >
         {houseAdverts.map(houseAdvert => 
-          <Card item={houseAdvert}/>
+          <HouseCard item={houseAdvert}/>
         )}
       </Box>
 
@@ -444,4 +449,4 @@ function ResponsiveAppBar() {
     </>
   );
 }
-export default ResponsiveAppBar;
+export default HomePage;

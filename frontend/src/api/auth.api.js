@@ -1,5 +1,6 @@
 import axios from 'axios';
 import getToken from '../util/getToken';
+import { useNavigate } from 'react-router-dom';
 
 const token = getToken();
 
@@ -9,9 +10,9 @@ export const register = async (data) => {
 }
 
 export const login = async (data) => {
-    return axios.post("/login", data)
-                .then(res => res.data)
-                .catch(err => {throw err});
+    axios.post("/login", data)
+         .then(res => window.localStorage.setItem("token", res.data.token))
+         .catch(err => {throw err});
 }
 
 export const changePassword = async (data) => {

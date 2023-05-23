@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Home from "../Home/index.js";
-import Card from "../../components/Card/";
+import Card from "../../components/Card/HouseAdvertCard/index.js";
 import { getHouseAdvertPage } from "../../api/houseAdvert.api.js";
 
 const index = () => {
