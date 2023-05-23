@@ -110,13 +110,8 @@ public class BelongingsAdvertService {
         belongingsAdvert.setShippable(body.isShippable());
         belongingsAdvert.setExchangeable(body.isExchangeable());
 
-        if (!belongingsAdvert.getImageUrls().isEmpty()){
-            String[] urls = ImageUtil.convertListToArray("belongings-advert", belongingsAdvert.getImageUrls());
-            imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(), urls);
-        }
 
         if (body.getPhotos().size() > 0){
-            List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : body.getPhotos()){
                 ImageUtil.isImage(file);
                 Map<String, String> metadata = ImageUtil.extractMetadata(file);
@@ -124,15 +119,30 @@ public class BelongingsAdvertService {
                 String filename = String.format("%s-%s",UUID.randomUUID(),file.getOriginalFilename());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
-                    imageUrls.add(filename);
+                    belongingsAdvert.getImageUrls().add(filename);
                 }
                 catch (IOException e){
                     throw new FileUploadException();
                 }
             }
-            belongingsAdvert.setImageUrls(imageUrls);
         }
 
+        belongingsAdvertRepository.save(belongingsAdvert);
+    }
+
+    public void deleteBelongingsAdvertImage(Long id, String filename){
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        BelongingsAdvert belongingsAdvert = belongingsAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
+        if (!belongingsAdvert.getUser().equals(user)){
+            throw new UnauthorizedException();
+        }
+
+        if (!belongingsAdvert.getImageUrls().contains(filename)){
+            throw new ResourceNotFoundException(ResourceType.IMAGE);
+        }
+
+        imageStorageService.delete(BucketName.STORAGE_BUCKET.getBucketName(), String.format("belongings-advert/%s", filename));
+        belongingsAdvert.getImageUrls().remove(filename);
         belongingsAdvertRepository.save(belongingsAdvert);
     }
 

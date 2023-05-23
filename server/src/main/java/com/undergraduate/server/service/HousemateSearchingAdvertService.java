@@ -28,7 +28,6 @@ public class HousemateSearchingAdvertService {
         this.housemateSearchingAdvertRepository = housemateSearchingAdvertRepository;
         this.userService = userService;
     }
-
     public void createHousemateSearchingAdvert(HousemateSearchingAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HousemateSearchingAdvert housemateSearchingAdvert = new HousemateSearchingAdvert();

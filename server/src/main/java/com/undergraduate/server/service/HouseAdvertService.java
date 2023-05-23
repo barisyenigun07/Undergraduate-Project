@@ -6,6 +6,7 @@ import com.undergraduate.server.entity.User;
 import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
+import com.undergraduate.server.model.response.UserResponse;
 import com.undergraduate.server.repository.HouseAdvertRepository;
 import com.undergraduate.server.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class HouseAdvertService {
     public void createHouseAdvert(HouseAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HouseAdvert houseAdvert = new HouseAdvert();
+
         houseAdvert.setTitle(body.getTitle());
         houseAdvert.setDetail(body.getDetail());
         houseAdvert.setPrice(body.getPrice());
@@ -91,6 +93,12 @@ public class HouseAdvertService {
         return houseAdvertList.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
     }
 
+    public Page<HouseAdvertResponse> getHouseAdvertsPagination(int pageNo, int size){
+        Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
+        Page<HouseAdvert> houseAdvertPage = houseAdvertRepository.findAll(pageable);
+        return houseAdvertPage.map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert));
+    }
+
     @Cacheable(value = "images", key = "#filename")
     public byte[] getImageOfHouseAdvert(Long id, String filename){
         HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
@@ -114,18 +122,13 @@ public class HouseAdvertService {
         houseAdvert.setArea(body.getArea());
         houseAdvert.setWarmingType(body.getWarmingType());
         houseAdvert.setHouseType(body.getHouseType());
+        houseAdvert.setPropertyType(body.getPropertyType());
         houseAdvert.setAddress(body.getAddress());
         houseAdvert.setHasFurniture(body.isHasFurniture());
         houseAdvert.setOnSite(body.isOnSite());
         houseAdvert.setDues(body.getDues());
 
-        if (!houseAdvert.getImageUrls().isEmpty()){
-            String[] urls = ImageUtil.convertListToArray("house-advert", houseAdvert.getImageUrls());
-            imageStorageService.deleteMultipleImages(BucketName.STORAGE_BUCKET.getBucketName(),urls);
-        }
-
         if (body.getPhotos().size() > 0){
-            List<String> imageUrls = new ArrayList<>();
             for (MultipartFile file : body.getPhotos()){
                 ImageUtil.isImage(file);
                 Map<String, String> metadata = ImageUtil.extractMetadata(file);
@@ -133,15 +136,31 @@ public class HouseAdvertService {
                 String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
                 try {
                     imageStorageService.upload(path, filename, Optional.of(metadata), file.getInputStream());
-                    imageUrls.add(filename);
+                    houseAdvert.getImageUrls().add(filename);
                 }
                 catch (IOException e){
                     throw new FileUploadException();
                 }
             }
-            houseAdvert.setImageUrls(imageUrls);
         }
 
+        houseAdvertRepository.save(houseAdvert);
+    }
+
+    public void deleteHouseAdvertImage(Long id, String filename){
+        User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        HouseAdvert houseAdvert = houseAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
+
+        if (!houseAdvert.getUser().equals(user)) {
+            throw new UnauthorizedException();
+        }
+
+        if (!houseAdvert.getImageUrls().contains(filename)) {
+            throw new ResourceNotFoundException(ResourceType.IMAGE);
+        }
+
+        imageStorageService.delete(BucketName.STORAGE_BUCKET.getBucketName(), String.format("house-advert/%s", filename));
+        houseAdvert.getImageUrls().remove(filename);
         houseAdvertRepository.save(houseAdvert);
     }
 

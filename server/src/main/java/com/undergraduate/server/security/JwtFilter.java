@@ -1,5 +1,7 @@
 package com.undergraduate.server.security;
 
+import com.undergraduate.server.exception.TokenExpiredException;
+import com.undergraduate.server.exception.TokenParsingException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,11 +40,11 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtil.getUsernameFromToken(token);
             }
-            catch (IllegalArgumentException e){
-                e.printStackTrace();
+            catch (IllegalStateException e){
+                throw new TokenParsingException();
             }
             catch (ExpiredJwtException e){
-                e.printStackTrace();
+                throw new TokenExpiredException();
             }
         }
         else {

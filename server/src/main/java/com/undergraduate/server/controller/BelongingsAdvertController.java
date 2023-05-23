@@ -47,6 +47,11 @@ public class BelongingsAdvertController {
         belongingsAdvertService.updateBelongingsAdvert(id, newBody);
     }
 
+    @PutMapping("/belongings-advert/{id}/image/delete")
+    public void deleteBelongingsAdvertImage(@PathVariable Long id, @RequestParam("filename") String filename){
+        belongingsAdvertService.deleteBelongingsAdvertImage(id, filename);
+    }
+
     @DeleteMapping("/belongings-advert/{id}")
     public void deleteBelongingsAdvert(@PathVariable Long id){
         belongingsAdvertService.deleteBelongingsAdvert(id);

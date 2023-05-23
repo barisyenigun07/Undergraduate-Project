@@ -21,7 +21,7 @@ public class UserController {
         return userService.getUser(id);
     }
 
-    @GetMapping("/user/auth")
+    @GetMapping("/auth_user")
     public UserResponse getAuthUser(){
         return userService.getUser(userService.getAuthenticatedUserId());
     }

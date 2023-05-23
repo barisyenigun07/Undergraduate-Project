@@ -1,5 +1,6 @@
 package com.undergraduate.server.model.response;
 
+import com.undergraduate.server.entity.Role;
 import com.undergraduate.server.entity.User;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class UserResponse {
     private String username;
     private String contactInfo;
     private String profilePhotoUrl;
+    private Role role;
 
     public static UserResponse fromEntity(User user){
         return UserResponse.builder()
@@ -22,6 +24,7 @@ public class UserResponse {
                 .username(user.getUsername())
                 .contactInfo(user.getContactInfo())
                 .profilePhotoUrl(user.getProfilePhotoUrl())
+                .role(user.getRole())
                 .build();
     }
 }

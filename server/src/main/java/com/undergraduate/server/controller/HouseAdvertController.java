@@ -4,6 +4,7 @@ import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.service.HouseAdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,6 +39,11 @@ public class HouseAdvertController {
         return houseAdvertService.getHouseAdvertsPage(pageNo, size);
     }
 
+    @GetMapping("/house-advert/pagination")
+    public Page<HouseAdvertResponse> getHouseAdvertPagination(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
+        return houseAdvertService.getHouseAdvertsPagination(pageNo, size);
+    }
+
     @GetMapping("/house-advert/{id}/image/download")
     public byte[] getImageOfHouseAdvert(@PathVariable Long id, @RequestParam("filename") String filename){
         return houseAdvertService.getImageOfHouseAdvert(id, filename);
@@ -46,6 +52,11 @@ public class HouseAdvertController {
     @PutMapping("/house-advert/{id}")
     public void updateHouseAdvert(@PathVariable Long id, @ModelAttribute HouseAdvertRequest newBody){
         houseAdvertService.updateHouseAdvert(id, newBody);
+    }
+
+    @PutMapping("/house-advert/{id}/image/delete")
+    public void deleteHouseAdvertImage(@PathVariable Long id, @RequestParam("filename") String filename){
+        houseAdvertService.deleteHouseAdvertImage(id, filename);
     }
 
     @DeleteMapping("/house-advert/{id}")
