@@ -20,7 +20,10 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 
 
 import bg from "../../../src/bg-logo.jpg";
-import img1 from "../../../src/Component1.svg";
+import img1 from "../../../src/Component2.svg";
+import img2 from "../../../src/Component3.svg";
+import img3 from "../../../src/Component4.svg";
+
 import { ReactComponent as ReactLogo } from "../../../src/Component1.svg";
 
 import { maxWidth } from "@mui/system";
@@ -202,16 +205,12 @@ function HomePage() {
             What You Need
           </Typography>
           <Box sx={{ mt: 8 }}>
-            <Button sx={{ backgroundColor: "#ffff", color: "#FF5A3C", mr: 4 }}>
-              Looking For A Housemate
-            </Button>
-            <Button sx={{ backgroundColor: "#FF5A3C", color: "#ffff", mr: 4 }}>
-              House For Rent
-            </Button>
-            <Button sx={{ backgroundColor: "#ffff", color: "#FF5A3C", mr: 4 }}>
-              House For Sale
-            </Button>
-            <Button sx={{ backgroundColor: "#FF5A3C", color: "#ffff", mr: 4 }}>
+            <Button sx={{ 
+              backgroundColor: "#FF5A3C", 
+              color: "#ffff", 
+            "&:hover": {
+             backgroundColor: "#FF5A3C", 
+          }}}>
               Publish Advert
             </Button>
           </Box>
@@ -256,7 +255,13 @@ function HomePage() {
             />
             <TextField
               id="outlined-basic"
-              label="Price"
+              label="Min Price"
+              variant="outlined"
+              sx={{ mr: 2 }}
+            />
+                 <TextField
+              id="outlined-basic"
+              label="Max Price"
               variant="outlined"
               sx={{ mr: 2 }}
             />
@@ -355,9 +360,10 @@ function HomePage() {
           p: 2,
         }}
       >
+        <img src={img1} alt="React Logo" />
         <ReactLogo />
-        <ReactLogo />
-        <ReactLogo />
+        <img src={img2} alt="React Logo" />
+        <img src={img3} alt="React Logo" />
       </Box>
 
       <Box
@@ -440,8 +446,7 @@ function HomePage() {
             }}
           >
             <Typography variant="caption" color="initial">
-              Copyright ©2022. Tüm Hakları Barış Yenigün'e aittir. Kim ulen bu
-              demeyin açık bi bakın ağama
+              Copyright ©2022. Tüm Hakları Barış Yenigün'e aittir.
             </Typography>
           </Box>
         </Container>
