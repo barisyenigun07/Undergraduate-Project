@@ -1,7 +1,7 @@
 import { useFormik } from 'formik'
 import React from 'react'
 import { createBelongingsAdvert } from '../../../api/belongingsAdvert.api';
-import { Box, Button, TextField, Typography, Container, Paper, Stack } from '@mui/material';
+import { Box, Button, TextField, Typography, Container, Paper, Stack, Select, MenuItem } from '@mui/material';
 import AppBar from "@mui/material/AppBar";
 import AppBar3 from "../../../components/AppBar3";
 import PropTypes from 'prop-types';
@@ -9,6 +9,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Cards from './Cards'
 import InputLabel from '@mui/material/InputLabel';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+
 
 const BelongingsAdvertForm = () => {
   const formik = useFormik({
@@ -27,6 +30,7 @@ const BelongingsAdvertForm = () => {
       try {
         const formData = new FormData();
         formData.append("title", values.title);
+        formData.append("title2", values.title2);
         formData.append("detail", values.detail);
         formData.append("price", values.price);
         formData.append("type", values.type);
@@ -46,18 +50,28 @@ const BelongingsAdvertForm = () => {
   return (
     <div>
       <AppBar3 />
-      <Box sx={{ mt: 4, justifyContent: "center", display: "flex", textAlign: "center", }}>
-        <Box sx={{ mt: 4, justifyContent: "center", display: "flex", textAlign: "center", width:0.8 }}>
+      <Box sx={{ width: '100%', ml: 2, mt: 4, }}>
+        <Typography variant="h3" gutterBottom>
+          Add Advert
+        </Typography>
+      </Box>
+      <Box sx={{ mt: 1, justifyContent: "center", display: "flex", textAlign: "center", }}>
+        <Box sx={{ mt: 1, justifyContent: "center", display: "flex", textAlign: "center", width: 0.8 }}>
           <form onSubmit={formik.handleSubmit}>
-            <Stack direction="row" spacing={2}>
+            <Box>
               <Box>
                 <TextField
                   id='title'
                   name='title'
                   type='text'
+                  multiline
                   value={formik.values.title}
                   onChange={formik.handleChange}
                   label="Title"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
               <Box>
@@ -65,9 +79,14 @@ const BelongingsAdvertForm = () => {
                   id='detail'
                   name='detail'
                   type='text'
+                  multiline
                   value={formik.values.detail}
                   onChange={formik.handleChange}
-                  label="Title"
+                  label="Detail"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
               <Box>
@@ -75,9 +94,14 @@ const BelongingsAdvertForm = () => {
                   id='price'
                   name='price'
                   type={"number"}
+                  multiline
                   value={formik.values.price}
                   onChange={formik.handleChange}
                   label="price"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
               <Box>
@@ -85,14 +109,66 @@ const BelongingsAdvertForm = () => {
                   id='type'
                   name='type'
                   type='text'
+                  multiline
                   value={formik.values.type}
                   onChange={formik.handleChange}
                   label="type"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
-            </Stack>
-            <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            </Box>
             <Box>
+              <Box>
+                <TextField
+                  id='title2'
+                  name='title2'
+                  type='text'
+                  multiline
+                  value={formik.values.title2}
+                  onChange={formik.handleChange}
+                  label="Title2"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
+                />
+              </Box>
+              <Box>
+                <TextField
+                  id='price'
+                  name='price'
+                  type={"number"}
+                  multiline
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
+                  label="price"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
+                />
+              </Box>
+              <Box>
+                <TextField
+                  id='type'
+                  name='type'
+                  type='text'
+                  multiline
+                  value={formik.values.type}
+                  onChange={formik.handleChange}
+                  label="type"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Box>
                 <TextField
                   id='status'
                   name='status'
@@ -100,6 +176,10 @@ const BelongingsAdvertForm = () => {
                   value={formik.values.status}
                   onChange={formik.handleChange}
                   label="status"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
               <Box>
@@ -110,6 +190,10 @@ const BelongingsAdvertForm = () => {
                   value={formik.values.isShippable}
                   onChange={formik.handleChange}
                   label="isShippable"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
               <Box>
@@ -119,7 +203,11 @@ const BelongingsAdvertForm = () => {
                   type='text'
                   value={formik.values.isExchangeable}
                   onChange={formik.handleChange}
-                  label="isShippable"
+                  label="isExchangeable"
+                  sx={{
+                    mt: 2,
+                    width: '450px',
+                  }}
                 />
               </Box>
               <Box>
@@ -135,7 +223,33 @@ const BelongingsAdvertForm = () => {
                   />
                 </Button>
               </Box>
-              </Stack>
+              <Box>
+                <Button variant='contained' component="label" sx={{ mt: 2, backgroundColor:'#8e1904' }}>
+                  Create Advert
+                  <div>
+                    <Popup trigger=
+                      {<button></button>}
+                      modal nested>
+                      {
+                        close => (
+                          <div className='modal'>
+                            <div className='content'>
+                              İLANINIZ BAŞARIYLA OLUŞTURULDU.
+                            </div>
+                            <div>
+                              <button onClick=
+                                {() => close()}>
+                                Close modal
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      }
+                    </Popup>
+                  </div>
+                </Button>
+              </Box>
+            </Box>
           </form>
         </Box>
       </Box>
@@ -143,8 +257,8 @@ const BelongingsAdvertForm = () => {
         sx={{
           bottom: 0,
           backgroundColor: "#D4D4D4",
-          p: 2, 
-          mt:4,
+          p: 2,
+          mt: 4,
         }}
         component="footer"
         square
