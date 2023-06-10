@@ -8,10 +8,22 @@ export const createHousemateWantingAdvert = async (data) => {
          .catch(err => {throw err});
 }
 
+export const getHousemateWantingAdverts = async () => {
+    return axios.get("/housemate-wanting-advert")
+                .then(res => res.data)
+                .catch(err => {throw err});
+}
+
 export const getHousemateWantingAdvertPage = async (page = 0, size = 10) => {
     axios.get(`/housemate-wanting-advert/page?page_no=${page}&size=${size}`)
          .then(res => res.data)
          .catch(err => {throw err});
+}
+
+export const getHousemateWantingAdvertsByUser = async (userId) => {
+    return axios.get(`/housemate-wanting-advert/user?user_id=${userId}`)
+                .then(res => res.data)
+                .catch(err => {throw err});
 }
 
 export const getHousemateWantingAdvert = async (id) => {

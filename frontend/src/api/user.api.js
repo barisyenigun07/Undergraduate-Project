@@ -14,6 +14,12 @@ export const updateUser = async (formData) => {
          .catch(err => {throw err});
 }
 
+export const getUser = async (id) => {
+    return axios.get(`/user/${id}`)
+                .then(res => res.data)
+                .catch(err => {throw err});
+}
+
 export const logout = async () => {
     localStorage.clear();
 }

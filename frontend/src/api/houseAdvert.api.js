@@ -22,6 +22,12 @@ export const getHouseAdvertPage = async (page = 0, size = 10) => {
                 .catch(err => {throw err});
 }
 
+export const getHouseAdvertsByUser = async (userId) => {
+    return axios.get(`/house-advert/user?user_id=${userId}`)
+                .then(res => res.data)
+                .catch(err => {throw err});
+}
+
 export const getHouseAdvert = async (id) => {
     return axios.get(`/house-advert/${id}`)
                 .then(res =>  res.data)

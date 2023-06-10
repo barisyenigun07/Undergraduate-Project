@@ -9,6 +9,7 @@ import Home from "./pages/Home/index.js";
 import Houses from "./pages/Houses/index";
 import Navbar from "./components/Navbar";
 import BelongingsAdvertForm from "./pages/AdvertForm/BelongingsAdvertForm";
+import UserProfile from "./pages/UserProfile/UserProfile";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/navbar" element={<Navbar />} />
           <Route path="/belongings-advert-form" element={<BelongingsAdvertForm/>}/>
+          <Route path="/user/:userId" element={<UserProfile/>}/>
         </Routes>
       </BrowserRouter>
     </>

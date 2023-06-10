@@ -1,13 +1,14 @@
-import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@mui/material"
+import { Card, CardContent, Typography, CardActions, Button } from "@mui/material"
+import SimpleImageSlider from "react-simple-image-slider/dist/ImageSlider";
 
 
 const BelongingsCard = ({item}) => {
     return (
       <Card sx={{minWidth: 345}}>
-        <CardMedia
-          component={"img"}
-          alt='item'
-          image={`http://localhost:8080/belongings-advert/${item.id}/image/download?filename=${item.imageUrls[0]}`}
+        <SimpleImageSlider
+          width={345}
+          height={200}
+          images={item.imageUrls?.map(imageUrl => `http://localhost:8080/belongings-advert/${item.id}/image/download?filename=${imageUrl}`)}
         />
         <CardContent>
           <Typography gutterBottom variant='h5' component={"div"}>

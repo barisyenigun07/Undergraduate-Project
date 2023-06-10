@@ -14,6 +14,12 @@ export const getHousemateSeachingAdvertPage = async (page = 0, size = 10) => {
                 .catch(err => {throw err});
 }
 
+export const getHousemateSearchingAdvertsByUser = async (userId) => {
+    return axios.get(`/housemate-searching-advert/user?user_id=${userId}`)
+                .then(res => res.data)
+                .catch(err => {throw err});
+}
+
 export const getHousemateSeachingAdvert = async (id) => {
     return axios.get(`/housemate-searching-advert/${id}`)
                 .then(res => res.data)

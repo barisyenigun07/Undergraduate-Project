@@ -37,6 +37,7 @@ const Login = () => {
       try {
         
         await login(values);
+        
         navigate("/home");
         //window.location.reload();
       }

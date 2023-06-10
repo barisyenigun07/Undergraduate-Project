@@ -1,10 +1,14 @@
+import { Box, Grid } from '@mui/material'
 import React from 'react'
 
-const UserProfile = () => {
+const UserProfile = ({user}) => {
+  
   return (
-    <div>
+    <Box>
+      <Box sx={{width: "100%", height: "100vm", backgroundImage: `url(${"../../components/bg-logo.jpg"})`}}>
         
-    </div>
+      </Box>
+    </Box>
   )
 }
 

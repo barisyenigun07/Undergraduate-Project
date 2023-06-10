@@ -20,13 +20,19 @@ export const getBelongingsAdvert = async (id) => {
            .catch(err => {throw err});
 }
 
+export const getBelongingsAdvertsByUser = async (userId) => {
+    return axios.get(`/belongings-advert/user?user_id=${userId}`)
+                .then(res => res.data)
+                .catch(err => {throw err});
+}
+
 export const updateBelongingsAdvert = async (id, formData) => {
     axios.put(`/belongings-advert/${id}`, formData, {headers: {Authorization: `Bearer ${token}`}})
          .catch(err => {throw err});
 }
 
 export const deleteBelongingsAdvertImage = async (id, filename) => {
-    axios.put(`/belongings-advert/${id}`, {headers: {Authorization: `Bearer ${token}`}})
+    axios.put(`/belongings-advert/${id}/image/delete?filename=${filename}`, {headers: {Authorization: `Bearer ${token}`}})
          .catch(err => {throw err});
 }
 
