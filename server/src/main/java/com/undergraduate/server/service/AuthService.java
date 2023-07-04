@@ -42,11 +42,11 @@ public class AuthService {
         Optional<User> optionalUserByEmail = userRepository.findByEmail(body.getEmail());
 
         if (optionalUserByUsername.isPresent()){
-            throw new UserAlreadyExistsException();
+            throw new AlreadyTakenException(AlreadyTakenType.USERNAME);
         }
 
         if (optionalUserByEmail.isPresent()){
-            throw new EmailAlreadyTakenException();
+            throw new AlreadyTakenException(AlreadyTakenType.EMAIL);
         }
 
         if (!body.getPassword().equals(body.getPasswordRepeat())){

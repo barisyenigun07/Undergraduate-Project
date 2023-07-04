@@ -8,6 +8,7 @@ import com.undergraduate.server.model.request.HouseAdvertRequest;
 import com.undergraduate.server.model.response.HouseAdvertResponse;
 import com.undergraduate.server.model.response.UserResponse;
 import com.undergraduate.server.repository.HouseAdvertRepository;
+import com.undergraduate.server.repository.UserRepository;
 import com.undergraduate.server.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,11 +31,14 @@ public class HouseAdvertService {
     private final ImageStorageService imageStorageService;
     private final UserService userService;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public HouseAdvertService(HouseAdvertRepository houseAdvertRepository, ImageStorageService imageStorageService,UserService userService){
+    public HouseAdvertService(HouseAdvertRepository houseAdvertRepository, ImageStorageService imageStorageService,UserService userService, UserRepository userRepository){
         this.houseAdvertRepository = houseAdvertRepository;
         this.imageStorageService = imageStorageService;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public void createHouseAdvert(HouseAdvertRequest body){
@@ -86,17 +90,16 @@ public class HouseAdvertService {
         return houseAdverts.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
     }
 
-    public List<HouseAdvertResponse> getHouseAdvertsPage(int pageNo, int size){
-        Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
-        Page<HouseAdvert> houseAdvertPage = houseAdvertRepository.findAll(pageable);
-        List<HouseAdvert> houseAdvertList = houseAdvertPage.toList();
-        return houseAdvertList.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
-    }
-
-    public Page<HouseAdvertResponse> getHouseAdvertsPagination(int pageNo, int size){
+    public Page<HouseAdvertResponse> getHouseAdvertsPage(int pageNo, int size){
         Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
         Page<HouseAdvert> houseAdvertPage = houseAdvertRepository.findAll(pageable);
         return houseAdvertPage.map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert));
+    }
+
+    public List<HouseAdvertResponse> getHouseAdvertsByUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        List<HouseAdvert> houseAdvertsByUser = houseAdvertRepository.findAllByUser(user);
+        return houseAdvertsByUser.stream().map(houseAdvert -> HouseAdvertResponse.fromEntity(houseAdvert)).collect(Collectors.toList());
     }
 
     @Cacheable(value = "images", key = "#filename")

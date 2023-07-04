@@ -6,6 +6,7 @@ import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HousemateWantingAdvertRequest;
 import com.undergraduate.server.model.response.HousemateWantingAdvertResponse;
 import com.undergraduate.server.repository.HousemateWantingAdvertRepository;
+import com.undergraduate.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +24,13 @@ public class HousemateWantingAdvertService {
     private final HousemateWantingAdvertRepository housemateWantingAdvertRepository;
     private final UserService userService;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public HousemateWantingAdvertService(HousemateWantingAdvertRepository housemateWantingAdvertRepository, UserService userService){
+    public HousemateWantingAdvertService(HousemateWantingAdvertRepository housemateWantingAdvertRepository, UserService userService, UserRepository userRepository){
         this.housemateWantingAdvertRepository = housemateWantingAdvertRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public void createHousemateWantingAdvert(HousemateWantingAdvertRequest body){
@@ -47,16 +51,21 @@ public class HousemateWantingAdvertService {
         return HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert);
     }
 
+    public List<HousemateWantingAdvertResponse> getHousemateWantingAdvertsByUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        List<HousemateWantingAdvert> housemateWantingAdvertsByUser = housemateWantingAdvertRepository.findAllByUser(user);
+        return housemateWantingAdvertsByUser.stream().map(housemateWantingAdvert -> HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert)).collect(Collectors.toList());
+    }
+
     public List<HousemateWantingAdvertResponse> getHousemateWantingAdverts(){
         List<HousemateWantingAdvert> housemateWantingAdverts = housemateWantingAdvertRepository.findAll();
         return housemateWantingAdverts.stream().map(housemateWantingAdvert -> HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert)).collect(Collectors.toList());
     }
 
-    public List<HousemateWantingAdvertResponse> getHousemateWantingAdvertPage(int pageNo, int size){
+    public Page<HousemateWantingAdvertResponse> getHousemateWantingAdvertPage(int pageNo, int size){
         Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
         Page<HousemateWantingAdvert> housemateWantingAdvertPage = housemateWantingAdvertRepository.findAll(pageable);
-        List<HousemateWantingAdvert> housemateWantingAdvertList = housemateWantingAdvertPage.toList();
-        return housemateWantingAdvertList.stream().map(housemateWantingAdvert -> HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert)).collect(Collectors.toList());
+        return housemateWantingAdvertPage.map(housemateWantingAdvert -> HousemateWantingAdvertResponse.fromEntity(housemateWantingAdvert));
     }
 
     public void updateHousemateWantingAdvert(Long id, HousemateWantingAdvertRequest body){

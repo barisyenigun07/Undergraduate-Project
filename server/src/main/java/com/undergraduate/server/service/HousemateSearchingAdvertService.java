@@ -6,6 +6,7 @@ import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.HousemateSearchingAdvertRequest;
 import com.undergraduate.server.model.response.HousemateSearchingAdvertResponse;
 import com.undergraduate.server.repository.HousemateSearchingAdvertRepository;
+import com.undergraduate.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +24,13 @@ public class HousemateSearchingAdvertService {
     private final HousemateSearchingAdvertRepository housemateSearchingAdvertRepository;
     private final UserService userService;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public HousemateSearchingAdvertService(HousemateSearchingAdvertRepository housemateSearchingAdvertRepository, UserService userService){
+    public HousemateSearchingAdvertService(HousemateSearchingAdvertRepository housemateSearchingAdvertRepository, UserService userService, UserRepository userRepository){
         this.housemateSearchingAdvertRepository = housemateSearchingAdvertRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
     public void createHousemateSearchingAdvert(HousemateSearchingAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
@@ -50,16 +54,22 @@ public class HousemateSearchingAdvertService {
         return HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert);
     }
 
+    public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertsByUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        List<HousemateSearchingAdvert> housemateSearchingAdvertsByUser = housemateSearchingAdvertRepository.findAllByUser(user);
+        return housemateSearchingAdvertsByUser.stream().map(housemateSearchingAdvert -> HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert)).collect(Collectors.toList());
+    }
+
     public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdverts(){
         List<HousemateSearchingAdvert> housemateSearchingAdverts = housemateSearchingAdvertRepository.findAll();
         return housemateSearchingAdverts.stream().map(housemateSearchingAdvert -> HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert)).collect(Collectors.toList());
     }
 
-    public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertPage(int pageNo, int size){
+
+    public Page<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertPage(int pageNo, int size){
         Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
         Page<HousemateSearchingAdvert> housemateSearchingAdvertPage = housemateSearchingAdvertRepository.findAll(pageable);
-        List<HousemateSearchingAdvert> housemateSearchingAdvertList = housemateSearchingAdvertPage.toList();
-        return housemateSearchingAdvertList.stream().map(housemateSearchingAdvert -> HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert)).collect(Collectors.toList());
+        return housemateSearchingAdvertPage.map(housemateSearchingAdvert -> HousemateSearchingAdvertResponse.fromEntity(housemateSearchingAdvert));
     }
 
     public void updateHousemateSearchingAdvert(Long id, HousemateSearchingAdvertRequest body){

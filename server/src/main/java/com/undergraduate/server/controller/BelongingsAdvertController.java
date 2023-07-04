@@ -4,6 +4,7 @@ import com.undergraduate.server.model.request.BelongingsAdvertRequest;
 import com.undergraduate.server.model.response.BelongingsAdvertResponse;
 import com.undergraduate.server.service.BelongingsAdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +28,18 @@ public class BelongingsAdvertController {
         return belongingsAdvertService.getBelongingsAdvert(id);
     }
 
+    @GetMapping("/belongings-advert/user")
+    public List<BelongingsAdvertResponse> getBelongingsAdvertsByUser(@RequestParam("user_id") Long userId) {
+        return belongingsAdvertService.getBelongingsAdvertsByUser(userId);
+    }
+
     @GetMapping("/belongings-advert")
     public List<BelongingsAdvertResponse> getBelongingsAdverts(){
         return belongingsAdvertService.getBelongingsAdverts();
     }
 
     @GetMapping("/belongings-advert/page")
-    public List<BelongingsAdvertResponse> getBelongingsAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
+    public Page<BelongingsAdvertResponse> getBelongingsAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
         return belongingsAdvertService.getBelongingsAdvertPage(pageNo, size);
     }
 

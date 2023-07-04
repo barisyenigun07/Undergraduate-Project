@@ -29,21 +29,20 @@ public class HouseAdvertController {
         return houseAdvertService.getHouseAdvert(id);
     }
 
+    @GetMapping("/house-advert/user")
+    public List<HouseAdvertResponse> getHouseAdvertsByUser(@RequestParam("user_id") Long userId) {
+        return houseAdvertService.getHouseAdvertsByUser(userId);
+    }
+
     @GetMapping("/house-advert")
     public List<HouseAdvertResponse> getHouseAdverts(){
         return houseAdvertService.getHouseAdverts();
     }
 
     @GetMapping("/house-advert/page")
-    public List<HouseAdvertResponse> getHouseAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
+    public Page<HouseAdvertResponse> getHouseAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
         return houseAdvertService.getHouseAdvertsPage(pageNo, size);
     }
-
-    @GetMapping("/house-advert/pagination")
-    public Page<HouseAdvertResponse> getHouseAdvertPagination(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
-        return houseAdvertService.getHouseAdvertsPagination(pageNo, size);
-    }
-
     @GetMapping("/house-advert/{id}/image/download")
     public byte[] getImageOfHouseAdvert(@PathVariable Long id, @RequestParam("filename") String filename){
         return houseAdvertService.getImageOfHouseAdvert(id, filename);

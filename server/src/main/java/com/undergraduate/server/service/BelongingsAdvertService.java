@@ -7,6 +7,7 @@ import com.undergraduate.server.exception.*;
 import com.undergraduate.server.model.request.BelongingsAdvertRequest;
 import com.undergraduate.server.model.response.BelongingsAdvertResponse;
 import com.undergraduate.server.repository.BelongingsAdvertRepository;
+import com.undergraduate.server.repository.UserRepository;
 import com.undergraduate.server.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,12 +29,14 @@ public class BelongingsAdvertService {
     private final BelongingsAdvertRepository belongingsAdvertRepository;
     private final ImageStorageService imageStorageService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public BelongingsAdvertService(BelongingsAdvertRepository belongingsAdvertRepository, ImageStorageService imageStorageService, UserService userService){
+    public BelongingsAdvertService(BelongingsAdvertRepository belongingsAdvertRepository, ImageStorageService imageStorageService, UserService userService, UserRepository userRepository){
         this.belongingsAdvertRepository = belongingsAdvertRepository;
         this.imageStorageService = imageStorageService;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public void createBelongingsAdvert(BelongingsAdvertRequest body){
@@ -79,11 +82,16 @@ public class BelongingsAdvertService {
         return belongingsAdverts.stream().map(belongingsAdvert -> BelongingsAdvertResponse.fromEntity(belongingsAdvert)).collect(Collectors.toList());
     }
 
-    public List<BelongingsAdvertResponse> getBelongingsAdvertPage(int pageNo, int size){
+    public List<BelongingsAdvertResponse> getBelongingsAdvertsByUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
+        List<BelongingsAdvert> belongingsAdvertsByUser = belongingsAdvertRepository.findAllByUser(user);
+        return belongingsAdvertsByUser.stream().map(belongingsAdvert -> BelongingsAdvertResponse.fromEntity(belongingsAdvert)).collect(Collectors.toList());
+    }
+
+    public Page<BelongingsAdvertResponse> getBelongingsAdvertPage(int pageNo, int size){
         Pageable pageable = PageRequest.of(pageNo, size, Sort.by("publishedDate").descending());
         Page<BelongingsAdvert> belongingsAdvertPage = belongingsAdvertRepository.findAll(pageable);
-        List<BelongingsAdvert> belongingsAdvertList = belongingsAdvertPage.toList();
-        return belongingsAdvertList.stream().map(belongingsAdvert -> BelongingsAdvertResponse.fromEntity(belongingsAdvert)).collect(Collectors.toList());
+        return belongingsAdvertPage.map(belongingsAdvert -> BelongingsAdvertResponse.fromEntity(belongingsAdvert));
     }
 
     @Cacheable(value = "images", key = "#filename")

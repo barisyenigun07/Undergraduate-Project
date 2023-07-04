@@ -4,6 +4,7 @@ import com.undergraduate.server.model.request.HousemateSearchingAdvertRequest;
 import com.undergraduate.server.model.response.HousemateSearchingAdvertResponse;
 import com.undergraduate.server.service.HousemateSearchingAdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +28,18 @@ public class HousemateSearchingAdvertController {
         return housemateSearchingAdvertService.getHousemateSearchingAdvert(id);
     }
 
+    @GetMapping("/housemate-searching-advert/user")
+    public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertsByUser(@RequestParam("user_id") Long userId){
+        return housemateSearchingAdvertService.getHousemateSearchingAdvertsByUser(userId);
+    }
+
     @GetMapping("/housemate-searching-advert")
     public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdverts(){
         return housemateSearchingAdvertService.getHousemateSearchingAdverts();
     }
 
     @GetMapping("/housemate-searching-advert/page")
-    public List<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertPage(@RequestParam("page_no") int pageNo, @RequestParam("size") int size){
+    public Page<HousemateSearchingAdvertResponse> getHousemateSearchingAdvertPage(@RequestParam(value = "page_no") int pageNo, @RequestParam("size") int size){
         return housemateSearchingAdvertService.getHousemateSearchingAdvertPage(pageNo, size);
     }
 
