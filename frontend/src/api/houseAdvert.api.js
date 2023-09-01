@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getToken from '../util/getToken';
+import { getToken } from '../util/getToken';
 
 
 const token = getToken();

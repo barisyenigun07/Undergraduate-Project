@@ -27,10 +27,10 @@ import { ReactComponent as ReactLogo } from "../../src/Component1.svg";
 
 import { maxWidth } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { getHouseAdverts } from "../api/houseAdvert.api";
-import { getAuthUser } from "../api/user.api";
+import { getHouseAdverts } from "../../api/houseAdvert.api";
+import { getAuthUser } from "../../api/user.api";
 import HouseCard from "./../components/Card/HouseAdvertCard/index"
-import getToken from "../util/getToken";
+import getToken from "../../util/getToken";
 
 const pages = ["Anasayfa", "İlan Ver", "Bize Ulaş"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -52,23 +52,15 @@ const advertType = [
     label: "Ev Arkadasi İlanları",
   },
 ];
-function HomePage() {
+function AppBar3() {
   const token = getToken();
   const [auth, setAuth] = React.useState(false);
   const [authUser, setAuthUser] = React.useState({});
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
 
-  const [houseAdverts, setHouseAdverts] = React.useState([]);
-
-  const getHouseAds = async () => {
-    try {
-      const houseAds = await getHouseAdverts();
-      setHouseAdverts(houseAds);
-    } catch (error) {
-      alert(error);
-    }
-  }
+  
+  
 
   const getAuthenticatedUser = async () => {
     try {
@@ -96,9 +88,14 @@ function HomePage() {
     setAnchorEl(null);
   };
 
+  const handlePublishAdvertButton = () => {
+    if (authUser && authUser.role?.name === "HOUSE_OWNER") {
+      navigate("/house-advert-form");
+    }
+  }
+
   React.useEffect(() => {
     getAuthenticatedUser();
-    getHouseAds();
   }, []);
   return (
     <>
@@ -132,44 +129,43 @@ function HomePage() {
                     fill="#0B2C3D"
                   />
                 </svg>
-                {pages.map((page) => (
-                  <MenuItem key={page}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
+                
                 {auth ? (
+                  
                   <div>
+                    <Button sx={{ 
+                        backgroundColor: "#FF5A3C", 
+                        color: "#ffff", 
+                      "&:hover": {
+                      backgroundColor: "#FF5A3C",
+                      
+                    }}}>
+                        Logout
+                    </Button>
+                    {"        "}
+                    <Button sx={{ 
+                        backgroundColor: "#FF5A3C", 
+                        color: "#ffff", 
+                      "&:hover": {
+                      backgroundColor: "#FF5A3C",
+                       
+                    }}
+                  }
+                    onClick={handlePublishAdvertButton}
+                    >
+                        Publish Advert
+                    </Button>
                     <IconButton
                       size="large"
                       aria-label="account of current user"
                       aria-controls="menu-appbar"
                       aria-haspopup="true"
-                      onClick={handleMenu}
+                      onClick={() => navigate(`/user/${authUser?.id}`)}
                       color="inherit"
                     >
-                      {authUser?.profilePhotoUrl == null ? <AccountCircle/> : <Avatar alt={`${authUser?.username}`} src={`http://localhost:8080/user/${authUser?.id}/image/download`}/>}
+                      {authUser?.profilePhotoUrl == null ? <Avatar>{authUser?.username[0]}</Avatar> : <Avatar alt={`${authUser?.username}`} src={`http://localhost:8080/user/${authUser?.id}/image/download`}/>}
                     </IconButton>
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
-                    >
-                      {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={() => navigate(`/${setting}`)}>
-                          <Typography textAlign="center">{setting}</Typography>
-                        </MenuItem>
-                      ))}
-                    </Menu>
+                    
                   </div>
                 ) : (
                   <>
@@ -196,4 +192,4 @@ function HomePage() {
     </>
   );
 }
-export default HomePage;
+export default AppBar3;

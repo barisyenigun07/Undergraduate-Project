@@ -1,7 +1,7 @@
 import { useFormik } from 'formik'
 import React from 'react'
 
-import { createHousemateWantingAdvert } from './../../../api/housemateWantingAdvert.api';
+import { createHousemateWantingAdvert } from '../../api/housemateWantingAdvert.api';
 import { Button, TextField } from '@mui/material';
 
 const HousemateWantingAdvertForm = () => {

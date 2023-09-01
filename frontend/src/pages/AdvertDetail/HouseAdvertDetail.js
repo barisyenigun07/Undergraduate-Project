@@ -1,264 +1,107 @@
-import { useFormik } from 'formik'
-import React from 'react'
-import { createBelongingsAdvert } from '../../../api/belongingsAdvert.api';
-import { Box, Button, TextField, Typography, Container, Paper, Stack, Select, MenuItem } from '@mui/material';
-import AppBar from "@mui/material/AppBar";
-import AppBar3 from "../../../components/AppBar3";
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Cards from './Cards'
-import InputLabel from '@mui/material/InputLabel';
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
+import React, { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import {Paper, Container, Avatar} from '@mui/material';
+import { getHouseAdvert } from '../../api/houseAdvert.api';
+import { Box, Typography } from '@mui/material';
+import  AppBar3  from '../../components/AppBar3';
+import Carousel from 'react-multi-carousel';
+import "react-multi-carousel/lib/styles.css";
+import { Phone } from '@mui/icons-material';
 
+const HouseAdvertDetail = () => {
+  
+    const responsive = {
+        desktop: {
+          breakpoint: {max: 3000, min: 1024},
+          items: 3,
+          
+        },
+        tablet: {
+          breakpoint: {max: 1024, min: 464},
+          items: 2,
+          
+        },
+        mobile: {
+          breakpoint: {max: 464, min: 0},
+          items: 1,
+          
+        }
+      };
+      
 
-const BelongingsAdvertForm = () => {
-  const formik = useFormik({
-    initialValues: {
-      title: "",
-      detail: "",
-      price: 0.0,
-      type: "",
-      status: "",
-      isShippable: false,
-      isExchangeable: false,
-      photos: []
-    },
-
-    onSubmit: async (values) => {
-      try {
-        const formData = new FormData();
-        formData.append("title", values.title);
-        formData.append("title2", values.title2);
-        formData.append("detail", values.detail);
-        formData.append("price", values.price);
-        formData.append("type", values.type);
-        formData.append("status", values.status);
-        formData.append("isShippable", values.isShippable);
-        formData.append("isExchangeable", values.isExchangeable);
-        formData.append("photos", values.photos);
-
-        await createBelongingsAdvert(formData);
-      }
-
-      catch (err) {
-        console.log(err);
-      }
+  const [houseAdvert, setHouseAdvert] = useState({});  
+  const { id } = useParams();
+  
+  useEffect(() => {
+    const getHouseAd = async () => {
+        const houseAd = await getHouseAdvert(id);
+        console.log(houseAd);
+        setHouseAdvert(houseAd);
     }
-  })
+    getHouseAd();
+  }, [id]);
+  
   return (
-    <div>
-      <AppBar3 />
-      <Box sx={{ width: '100%', ml: 2, mt: 4, }}>
-        <Typography variant="h3" gutterBottom>
-          Add Advert
-        </Typography>
-      </Box>
-      <Box sx={{ mt: 1, justifyContent: "center", display: "flex", textAlign: "center", }}>
-        <Box sx={{ mt: 1, justifyContent: "center", display: "flex", textAlign: "center", width: 0.8 }}>
-          <form onSubmit={formik.handleSubmit}>
-            <Box>
-              <Box>
-                <TextField
-                  id='title'
-                  name='title'
-                  type='text'
-                  multiline
-                  value={formik.values.title}
-                  onChange={formik.handleChange}
-                  label="Title"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
+    <Box>
+      <AppBar3/>
+        {/*<Carousel
+            responsive={responsive}
+            autoPlay={false}
+            swipeable={true}
+            draggable={true}
+            showDots={true}
+            infinite={true}
+            partialVisbile={false}
+            dotListClass='custom-dot-list-style'
+        >
+            {houseAdvert?.imageUrls?.map((imageUrl, index) => {
+                return (
+                    <div className='slider' key={index}>
+                        <img src={`http://localhost:8080/house-advert/${houseAdvert?.id}/image/download?filename=${imageUrl}`} alt='house' width={"550px"} height={"300px"}/>
+                    </div>
+                );
+            })}
+          </Carousel>*/}
+          <Box mt={2} sx={{display: "flex", justifyContent: "center"}}>
+          {houseAdvert?.imageUrls?.map(imageUrl => <img src={`http://localhost:8080/house-advert/${houseAdvert?.id}/image/download?filename=${imageUrl}`} alt='House' style={{margin: "2px"}} width={"550px"} height={"300px"}/>)}
+          </Box>
+        <Box mt={3} sx={{display: "flex", justifyContent: "center"}}>
+              <Box m={2} p={2} sx={{boxShadow: 12}}>
+                <Typography variant='h4'>{houseAdvert?.title}</Typography>
+                <br/> <br/>
+                <Typography variant='h6'>Detail <br/> {houseAdvert?.detail}</Typography>
+                <br/> <br/>
+                <Typography>Price: {houseAdvert?.price}₺</Typography>
+                <Typography>Room Count: {houseAdvert?.roomCount}</Typography>
+                <Typography>Area: {houseAdvert?.area} m²</Typography>
+                <Typography>Warming Type: {houseAdvert?.warmingType}</Typography>
+                <Typography>House Type: {houseAdvert?.houseType}</Typography>
+                <Typography>Property Type: {houseAdvert?.propertyType}</Typography>
+                <Typography>Address: {houseAdvert?.address}</Typography>
+                {houseAdvert?.hasFurniture ? <Typography>Has Furniture?: Yes</Typography> : <Typography>Has Furniture?: No</Typography>}
+                {houseAdvert?.isOnSite ? <Typography>Is On Site?: Yes</Typography> : <Typography>Is On Site?: No</Typography>}
+                <Typography>Dues: {houseAdvert?.dues}₺</Typography>
               </Box>
-              <Box>
-                <TextField
-                  id='detail'
-                  name='detail'
-                  type='text'
-                  multiline
-                  value={formik.values.detail}
-                  onChange={formik.handleChange}
-                  label="Detail"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
+              <Box width={350} height={350} m={2} sx={{pl: 4}}>
+                <Box sx={{boxShadow: 12, pl: 4}}>
+                  <Link style={{textDecoration: "none", color: "black"}} to={`/user/${houseAdvert?.userResponse?.id}`}> 
+                  <Typography variant='h5'>Publisher Info</Typography> <br/>
+                  
+                  {houseAdvert?.userResponse?.profilePhotoUrl == null ? <Avatar>{houseAdvert?.userResponse?.username[0]}</Avatar> : <Avatar src={`http://localhost:8080/user/${houseAdvert?.userResponse?.id}/image/download`} sx={{width: "100px", height: "100px"}}/>}
+                  
+                  <Typography>{houseAdvert?.userResponse?.name}</Typography>
+                  <Typography><Phone/> Contact Info: {houseAdvert?.userResponse?.contactInfo}</Typography>
+                  </Link>
+                </Box>
+                
               </Box>
-              <Box>
-                <TextField
-                  id='price'
-                  name='price'
-                  type={"number"}
-                  multiline
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                  label="price"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id='type'
-                  name='type'
-                  type='text'
-                  multiline
-                  value={formik.values.type}
-                  onChange={formik.handleChange}
-                  label="type"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-            </Box>
-            <Box>
-              <Box>
-                <TextField
-                  id='title2'
-                  name='title2'
-                  type='text'
-                  multiline
-                  value={formik.values.title2}
-                  onChange={formik.handleChange}
-                  label="Title2"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id='price'
-                  name='price'
-                  type={"number"}
-                  multiline
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                  label="price"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id='type'
-                  name='type'
-                  type='text'
-                  multiline
-                  value={formik.values.type}
-                  onChange={formik.handleChange}
-                  label="type"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-            </Box>
-            <Box>
-              <Box>
-                <TextField
-                  id='status'
-                  name='status'
-                  type='text'
-                  value={formik.values.status}
-                  onChange={formik.handleChange}
-                  label="status"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id='isShippable'
-                  name='isShippable'
-                  type='text'
-                  value={formik.values.isShippable}
-                  onChange={formik.handleChange}
-                  label="isShippable"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id='isExchangeable'
-                  name='isExchangeable'
-                  type='text'
-                  value={formik.values.isExchangeable}
-                  onChange={formik.handleChange}
-                  label="isExchangeable"
-                  sx={{
-                    mt: 2,
-                    width: '450px',
-                  }}
-                />
-              </Box>
-              <Box>
-                <Button variant='contained' component="label" sx={{ mt: 1 }}>
-                  Upload Photos
-                  <input
-                    type='file'
-                    multiple
-                    hidden
-                    onChange={(event) => {
-                      formik.values.photos(event.currentTarget.files)
-                    }}
-                  />
-                </Button>
-              </Box>
-              <Box>
-                <Button variant='contained' component="label" sx={{ mt: 2, backgroundColor:'#8e1904' }}>
-                  Create Advert
-                  <div>
-                    <Popup trigger=
-                      {<button></button>}
-                      modal nested>
-                      {
-                        close => (
-                          <div className='modal'>
-                            <div className='content'>
-                              İLANINIZ BAŞARIYLA OLUŞTURULDU.
-                            </div>
-                            <div>
-                              <button onClick=
-                                {() => close()}>
-                                Close modal
-                              </button>
-                            </div>
-                          </div>
-                        )
-                      }
-                    </Popup>
-                  </div>
-                </Button>
-              </Box>
-            </Box>
-          </form>
+            
         </Box>
-      </Box>
-      <Paper
+        <Paper
         sx={{
           bottom: 0,
           backgroundColor: "#D4D4D4",
           p: 2,
-          mt: 4,
         }}
         component="footer"
         square
@@ -308,8 +151,8 @@ const BelongingsAdvertForm = () => {
           </Box>
         </Container>
       </Paper>
-    </div >
+    </Box>
   )
 }
 
-export default BelongingsAdvertForm
+export default HouseAdvertDetail

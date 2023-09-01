@@ -1,1 +1,5 @@
-export default () => localStorage.getItem("token") ?? null;
+import Cookies from "js-cookie";
+
+export const getToken = () => { 
+    return Cookies.get("token");
+}

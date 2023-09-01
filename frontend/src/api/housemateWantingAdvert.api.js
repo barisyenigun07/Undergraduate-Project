@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getToken from '../util/getToken';
+import { getToken } from '../util/getToken';
 
 const token = getToken();
 
@@ -15,7 +15,7 @@ export const getHousemateWantingAdverts = async () => {
 }
 
 export const getHousemateWantingAdvertPage = async (page = 0, size = 10) => {
-    axios.get(`/housemate-wanting-advert/page?page_no=${page}&size=${size}`)
+    return axios.get(`/housemate-wanting-advert/page?page_no=${page}&size=${size}`)
          .then(res => res.data)
          .catch(err => {throw err});
 }
@@ -27,7 +27,7 @@ export const getHousemateWantingAdvertsByUser = async (userId) => {
 }
 
 export const getHousemateWantingAdvert = async (id) => {
-    axios.get(`/housemate-wanting-advert/${id}`)
+    return axios.get(`/housemate-wanting-advert/${id}`)
          .then(res => res.data)
          .catch(err => {throw err});
 }

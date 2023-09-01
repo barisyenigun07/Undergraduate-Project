@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import React from 'react'
-import { createHousemateSearchingAdvert } from '../../../api/housemateSearchingAdvert.api'
+import { createHousemateSearchingAdvert } from '../../api/housemateSearchingAdvert.api'
 import { Button, TextField } from '@mui/material'
 
 const HousemateSearchingAdvert = () => {

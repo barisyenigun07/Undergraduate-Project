@@ -1,6 +1,6 @@
 import axios from 'axios';
-import getToken from '../util/getToken';
-import { useNavigate } from 'react-router-dom';
+import { getToken } from '../util/getToken';
+import Cookies from 'js-cookie';
 
 const token = getToken();
 
@@ -12,8 +12,7 @@ export const register = async (data) => {
 export const login = async (data) => {
     axios.post("/login", data)
          .then((res) => {
-            console.log(res);
-            localStorage.setItem("token", res.data.token)
+            Cookies.set("token", res.data.token);
         })
          .catch(err => {throw err});
 }

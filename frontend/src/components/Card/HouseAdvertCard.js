@@ -5,8 +5,10 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SimpleImageSlider from 'react-simple-image-slider';
+import { useNavigate } from 'react-router-dom';
 
-const HouseCard = ({item}) => {
+const HouseAdvertCard = ({item}) => {
+  const navigate = useNavigate();
   return (
     <Card sx={{ minWidth: 345 }}>
       <SimpleImageSlider
@@ -25,11 +27,10 @@ const HouseCard = ({item}) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Details</Button>
-        <Button size="small">Add Favorite</Button>
+        <Button size="small" onClick={() => navigate(`/house-advert/${item.id}`)}>Details</Button>
       </CardActions>
     </Card>
   )
 }
 
-export default HouseCard
+export default HouseAdvertCard
