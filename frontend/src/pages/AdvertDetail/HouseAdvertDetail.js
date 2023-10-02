@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import {Paper, Container, Avatar} from '@mui/material';
 import { getHouseAdvert } from '../../api/houseAdvert.api';
 import { Box, Typography } from '@mui/material';
-import  AppBar3  from '../../components/AppBar3';
+import AppBar3 from '../../components/AppBar3';
 import Carousel from 'react-multi-carousel';
 import "react-multi-carousel/lib/styles.css";
 import { Phone } from '@mui/icons-material';

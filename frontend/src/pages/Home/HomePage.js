@@ -12,7 +12,6 @@ import {
 
 
 
-
 import img1 from "../../../src/Component2.svg";
 import img2 from "../../../src/Component3.svg";
 import img3 from "../../../src/Component4.svg";
@@ -23,10 +22,11 @@ import { getHouseAdvertPage } from "../../api/houseAdvert.api";
 import { getHousemateSearchingAdvertPage } from "../../api/housemateSearchingAdvert.api";
 import { getHousemateWantingAdvertPage } from "../../api/housemateWantingAdvert.api";
 import { getBelongingsAdvertPage } from '../../api/belongingsAdvert.api';
-import HouseCard from "../../components/Card/HouseAdvertCard/index"
+import HouseCard from "../../components/Card/HouseAdvertCard";
 import BelongingsCard from "../../components/Card/BelongingsAdvertCard";
-import HousemateCard from "../../components/Card/HousemateCard";
-import AppBar3 from "../../components/Navbar/AppBar3";
+import HousemateSearchingAdvertCard from "../../components/Card/HousemateSearchingAdvertCard";
+import HousemateWantingAdvertCard from "../../components/Card/HousemateWantingAdvertCard";
+import AppBar3 from "../../components/AppBar3";
 import Footer from "../../components/Footer/Footer";
 
 
@@ -340,7 +340,7 @@ function HomePage() {
           p: 2,
         }}
       >
-      {housemateSearchingAdverts?.length === 0 ? <Typography>No Housemate Searching Adverts Found</Typography> : housemateSearchingAdverts?.map(housemateSearchingAdvert => <HousemateCard item={housemateSearchingAdvert}/>)}
+      {housemateSearchingAdverts?.length === 0 ? <Typography>No Housemate Searching Adverts Found</Typography> : housemateSearchingAdverts?.map(housemateSearchingAdvert => <HousemateSearchingAdvertCard item={housemateSearchingAdvert}/>)}
       </Box>
       <Box width={"100%"} ml={20}>
         <Typography variant="h4" sx={{fontSize: "20px", fontWeight: "bold"}}>Wanting To Be Housemate Adverts</Typography>
@@ -358,7 +358,7 @@ function HomePage() {
           p: 2,
         }}
       >
-        {housemateWantingAdverts?.length === 0 ? <Typography>No Wanting To Be Housemate Adverts Found</Typography> : housemateWantingAdverts?.map(housemateWantingAdvert => <HousemateCard item={housemateWantingAdvert}/>)}
+        {housemateWantingAdverts?.length === 0 ? <Typography>No Wanting To Be Housemate Adverts Found</Typography> : housemateWantingAdverts?.map(housemateWantingAdvert => <HousemateWantingAdvertCard item={housemateWantingAdvert}/>)}
       </Box>
       <Box width={"100%"} ml={20}>
         <Typography variant="h4" sx={{fontSize: "20px", fontWeight: "bold"}}>Belongings Advert</Typography>

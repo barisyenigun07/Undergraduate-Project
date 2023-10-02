@@ -3,17 +3,16 @@ import "./App.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Register from "./pages/Auth/Register/Register";
+import Register from './pages/Auth/Register/Register';
 import Login from "./pages/Auth/Login/Login";
 import Home from "./pages/Home/HomePage.js";
-import Navbar from "./components/Navbar";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import BelongingsAdvertDetail from "./pages/AdvertDetail/BelongingsAdvertDetail";
 import HouseAdvertDetail from "./pages/AdvertDetail/HouseAdvertDetail";
 import HousemateSearchingAdvertDetail from "./pages/AdvertDetail/HousemateSearchingAdvertDetail";
 import HousemateWantingAdvertDetail from "./pages/AdvertDetail/HousemateWantingAdvertDetail";
-import BelongingsAdvertForm from './pages/AdvertForm/BelongingsAdvertForm/BelongingsAdvertForm'
-import HouseAdvertForm from "./pages/AdvertForm/HouseAdvertForm/HouseAdvertForm";
+import BelongingsAdvertForm from './pages/AdvertForm/BelongingsAdvertForm'
+import HouseAdvertForm from "./pages/AdvertForm/HouseAdvertForm";
 
 function App() {
   return (
@@ -23,8 +22,6 @@ function App() {
           <Route path="/" element={<Home/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/navbar" element={<Navbar />} />
           <Route path="/belongings-advert-form" element={<BelongingsAdvertForm/>}/>
           <Route path="/house-advert-form" element={<HouseAdvertForm/>}/>
           <Route path="/belongings-advert/:id" element={<BelongingsAdvertDetail/>}/>

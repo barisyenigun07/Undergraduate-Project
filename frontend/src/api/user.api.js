@@ -15,7 +15,7 @@ export const updateUser = async (formData) => {
 }
 
 export const getUser = async (id) => {
-    return axios.get(`/user/${id}`)
+    return await axios.get(`/user/${id}`)
                 .then(res => res.data)
                 .catch(err => {throw err});
 }

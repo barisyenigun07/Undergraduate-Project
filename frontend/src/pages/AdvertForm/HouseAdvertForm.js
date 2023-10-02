@@ -1,7 +1,7 @@
 import { Box, Button, Divider, TextField, Typography } from '@mui/material'
 import { createHouseAdvert } from '../../api/houseAdvert.api'
 import { useFormik } from 'formik'
-import AppBar3 from '../../components/Navbar/AppBar3';
+import AppBar3 from '../../components/AppBar3';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 

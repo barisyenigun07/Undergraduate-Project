@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getToken } from '../util/getToken';
-import Cookies from 'js-cookie';
+
 
 const token = getToken();
 
@@ -10,10 +10,8 @@ export const register = async (data) => {
 }
 
 export const login = async (data) => {
-    axios.post("/login", data)
-         .then((res) => {
-            Cookies.set("token", res.data.token);
-        })
+    return axios.post("/login", data)
+         .then((res) => res.data)
          .catch(err => {throw err});
 }
 

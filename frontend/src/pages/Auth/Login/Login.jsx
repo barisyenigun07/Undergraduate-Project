@@ -14,8 +14,9 @@ import { styled } from "@mui/material/styles";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { useFormik } from "formik";
-import { login } from "../../../api/auth.api";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../../../redux/authActions";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,6 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
   const formik = useFormik({
     initialValues: {
@@ -36,11 +38,14 @@ const Login = () => {
     
     onSubmit: async (values) => {
       try {
-        
-        await login(values);
-        
-        navigate("/home");
-        //window.location.reload();
+        dispatch(userLogin(values))
+          .unwrap()
+          .then(() => {
+            navigate("/");
+          })
+          .catch((err) => {
+            console.log(err);
+          })
       }
       catch (error) {
         console.log(error);

@@ -11,20 +11,21 @@ import { getHousemateWantingAdvertsByUser } from '../../api/housemateWantingAdve
 import { getBelongingsAdvertsByUser } from '../../api/belongingsAdvert.api';
 import HouseAdvertCard from '../../components/Card/HouseAdvertCard';
 import BelongingsAdvertCard from '../../components/Card/BelongingsAdvertCard';
-import HousemateSearchingAdvertCard from '../../components/Card/HousemateSearchingCard';
+import HousemateSearchingAdvertCard from '../../components/Card/HousemateSearchingAdvertCard';
 import HousemateWantingAdvertCard from '../../components/Card/HousemateWantingAdvertCard';
-import AppBar3 from '../../components/Navbar/AppBar3';
+import AppBar3 from '../../components/AppBar3';
 
 const UserProfile = () => {
-  const [user, setUser] = useState({});
+
+  const { userId } = useParams();
+
+  const [user, setUser] = useState();
   const [houseAdverts, setHouseAdverts] = useState([]);
   const [housemateSearchingAdverts, setHousemateSearchingAdverts] = useState([]);
   const [housemateWantingAdverts, setHousemateWantingAdverts] = useState([]);
   const [belongingsAdverts, setBelongingsAdverts] = useState([]); 
   
   const [value, setValue] = useState(0);
-
-  const { userId } = useParams();
   
   const navigate = useNavigate();
 
@@ -34,82 +35,68 @@ const UserProfile = () => {
     setValue(value);
   }
 
-  const fetchUserDetails = async () => {
-    try {
-      const userDetails = await getUser(userId);
-      setUser(userDetails);
-      console.log(user);
-    }
-    catch (err) {
-      console.log("Error!");
-    }
-  }
-
-  const getHouseAdverts = async () => {
-    if (user && user.role?.name === "HOUSE_OWNER") {
+  useEffect(() => {
+    const fetchUserDetails = async () => {
       try {
-        const houseAds = await getHouseAdvertsByUser(user.id);
-        setHouseAdverts(houseAds);
+        const userDetails = await getUser(userId);
+        setUser(userDetails);
       }
       catch (err) {
-
-      } 
-    }
-  }
-
-  const getHousemateSearchingAdverts = async () => {
-    if (user && user.role?.name === "STUDENT") {
-      try {
-        const housemateSearchingAds = await getHousemateSearchingAdvertsByUser(user.id);
-        setHousemateSearchingAdverts(housemateSearchingAds);
-      } catch (error) {
-        
+        console.log("Error!");
       }
     }
-  }
-
-  const getHousemateWantingAdverts = async () => {
-    if (user && user.role?.name === "STUDENT") {
-      try {
-        const housemateWantingAds = await getHousemateWantingAdvertsByUser(user.id);
-        setHousemateWantingAdverts(housemateWantingAds);
-      } catch (error) {
-        
-      }
-    }
-  }
-
-  const getBelongingsAdverts = async () => {
-    if (user && user.role?.name === "STUDENT") {
-      try {
-        const belongingsAds = await getBelongingsAdvertsByUser(user?.id);
-        setBelongingsAdverts(belongingsAds);
-      }
-      catch (error) {
-
-      }
-    }
-  }
-
   
-  useEffect(() => {
+    const getHouseAdverts = async () => {
+      if (user && user?.role?.name === "HOUSE_OWNER") {
+        try {
+          const houseAds = await getHouseAdvertsByUser(user.id);
+          setHouseAdverts(houseAds);
+        }
+        catch (err) {
+  
+        } 
+      }
+    }
+  
+    const getHousemateSearchingAdverts = async () => {
+      if (user && user.role?.name === "STUDENT") {
+        try {
+          const housemateSearchingAds = await getHousemateSearchingAdvertsByUser(user.id);
+          setHousemateSearchingAdverts(housemateSearchingAds);
+        } catch (error) {
+          
+        }
+      }
+    }
+  
+    const getHousemateWantingAdverts = async () => {
+      if (user && user.role?.name === "STUDENT") {
+        try {
+          const housemateWantingAds = await getHousemateWantingAdvertsByUser(user.id);
+          setHousemateWantingAdverts(housemateWantingAds);
+        } catch (error) {
+          
+        }
+      }
+    }
+  
+    const getBelongingsAdverts = async () => {
+      if (user && user.role?.name === "STUDENT") {
+        try {
+          const belongingsAds = await getBelongingsAdvertsByUser(user?.id);
+          setBelongingsAdverts(belongingsAds);
+        }
+        catch (error) {
+  
+        }
+      }
+    }
+
     fetchUserDetails();
-  }, [userId]);
-
-  useEffect(() => {
     getHouseAdverts();
-  }, [])
-
-  useEffect(() => {
-    getHousemateSearchingAdverts();
-  }, []);
-
-  useEffect(() => {
-    getHousemateWantingAdverts();
-  }, []);
-
-  useEffect(() => {
     getBelongingsAdverts();
+    getHousemateSearchingAdverts();
+    getHousemateWantingAdverts();
   }, []);
 
 
@@ -119,12 +106,12 @@ const UserProfile = () => {
       <Box sx={{width: "100%", height: "400px", backgroundImage: `url(${bg})`}}>
         <AppBar3/>
         <Box 
-        sx={{
-          display: "flex",
-          justifyContent: "center"
-          }}
+          sx={{
+            display: "flex",
+            justifyContent: "center"
+            }}
         >
-          {user?.profilePhotoUrl == null ? <Avatar sx={{width: 70, height: 70, mt: 2}}>{user?.username[0]}</Avatar> : <Avatar src={`http://localhost:8080/user/${user?.id}/image/download`} alt={`${user?.username}`} sx={{width: 70, height: 70, mt: 2}}/>}
+          {user && user?.profilePhotoUrl == null ? <Avatar sx={{width: 70, height: 70, mt: 2}}>{user?.username[0]}</Avatar> : <Avatar src={`http://localhost:8080/user/${user?.id}/image/download`} alt={`${user?.username}`} sx={{width: 70, height: 70, mt: 2}}/>}
         </Box>
         <Box mt={3} textAlign={"center"}>
           <Typography variant='h4' color={"white"}>{user?.name} - @{user?.username}</Typography>
@@ -133,7 +120,7 @@ const UserProfile = () => {
         </Box>
       </Box>
       <Box sx={{width: "100%"}}>
-          {user.role?.name === "HOUSE_OWNER" ? 
+          {user?.role?.name === "HOUSE_OWNER" ? 
             <Box sx={{mt: 5}}>
               <Typography variant='h4' ml={3}>
                 House Adverts of User

@@ -16,69 +16,22 @@ import {
   Container,
   Avatar,
 } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 
 
-import img1 from "../../src/Component3.svg";
-import img2 from "../../src/Component3.svg";
-import img3 from "../../src/Component4.svg";
 
-import { ReactComponent as ReactLogo } from "../../src/Component1.svg";
 
-import { maxWidth } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { getHouseAdverts } from "../../api/houseAdvert.api";
-import { getAuthUser } from "../../api/user.api";
-import HouseCard from "./../components/Card/HouseAdvertCard/index"
-import getToken from "../../util/getToken";
+import { useSelector } from "react-redux";
 
-const pages = ["Anasayfa", "İlan Ver", "Bize Ulaş"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-const advertType = [
-  {
-    value: "satilikEv",
-    label: "Satılık Ev",
-  },
-  {
-    value: "kiralikEv",
-    label: "Kiralık Ev",
-  },
-  {
-    value: "satilikEsya",
-    label: "satilikEsya",
-  },
-  {
-    value: "evArkadasIlan",
-    label: "Ev Arkadasi İlanları",
-  },
-];
 function AppBar3() {
-  const token = getToken();
-  const [auth, setAuth] = React.useState(false);
-  const [authUser, setAuthUser] = React.useState({});
+  
+
+  const { isLoggedIn, authUser } = useSelector((state) => state.auth);
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
-
   
   
-
-  const getAuthenticatedUser = async () => {
-    try {
-      if (token) {
-        const user = await getAuthUser();
-        setAuthUser(user);
-        setAuth(true);
-      }
-    }
-    catch (err) {
-      setAuth(false);
-      //navigate("/login");
-    }
-  }
-  
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -94,9 +47,7 @@ function AppBar3() {
     }
   }
 
-  React.useEffect(() => {
-    getAuthenticatedUser();
-  }, []);
+
   return (
     <>
         <Box
@@ -130,7 +81,7 @@ function AppBar3() {
                   />
                 </svg>
                 
-                {auth ? (
+                {isLoggedIn ? (
                   
                   <div>
                     <Button sx={{ 
@@ -163,7 +114,7 @@ function AppBar3() {
                       onClick={() => navigate(`/user/${authUser?.id}`)}
                       color="inherit"
                     >
-                      {authUser?.profilePhotoUrl == null ? <Avatar>{authUser?.username[0]}</Avatar> : <Avatar alt={`${authUser?.username}`} src={`http://localhost:8080/user/${authUser?.id}/image/download`}/>}
+                      {authUser?.profilePhotoUrl == null ? <Avatar>{authUser?.username.charAt(0)}</Avatar> : <Avatar alt={`${authUser?.username}`} src={`http://localhost:8080/user/${authUser?.id}/image/download`}/>}
                     </IconButton>
                     
                   </div>

@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Phone } from '@mui/icons-material';
 import { Avatar } from '@mui/material';
 import { useParams } from 'react-router-dom'
-import { getBelongingsAdvert } from '../../api/belongingsAdvert.api';
+import { getBelongingsAdvert } from './../../api/belongingsAdvert.api';
 import Carousel from 'react-multi-carousel';
 import "react-multi-carousel/lib/styles.css";
-import AppBar3 from '../../components/Navbar/AppBar3';
-import Footer from '../../components/Footer/Footer';
+import AppBar3 from './../../components/AppBar3';
+import Footer from './../../components/Footer/Footer';
 
 
 const BelongingsAdvertDetail = () => {
