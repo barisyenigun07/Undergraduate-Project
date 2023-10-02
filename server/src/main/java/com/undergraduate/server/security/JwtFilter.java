@@ -19,8 +19,8 @@ import java.io.IOException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    private JwtUserDetailsService userDetailsService;
-    private JwtUtil jwtUtil;
+    private final JwtUserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     public JwtFilter(JwtUserDetailsService userDetailsService, JwtUtil jwtUtil){
@@ -46,9 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
             catch (ExpiredJwtException e){
                 throw new TokenExpiredException();
             }
-        }
-        else {
-            //System.out.println("Bearer string not found!");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){

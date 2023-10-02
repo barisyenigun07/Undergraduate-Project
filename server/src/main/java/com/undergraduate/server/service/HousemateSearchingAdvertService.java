@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class HousemateSearchingAdvertService {
     private final HousemateSearchingAdvertRepository housemateSearchingAdvertRepository;
     private final UserService userService;
-
     private final UserRepository userRepository;
 
     @Autowired
@@ -32,9 +31,11 @@ public class HousemateSearchingAdvertService {
         this.userService = userService;
         this.userRepository = userRepository;
     }
+
     public void createHousemateSearchingAdvert(HousemateSearchingAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HousemateSearchingAdvert housemateSearchingAdvert = new HousemateSearchingAdvert();
+
         housemateSearchingAdvert.setTitle(body.getTitle());
         housemateSearchingAdvert.setDetail(body.getDetail());
         housemateSearchingAdvert.setMonthlyRentFee(body.getMonthlyRentFee());
@@ -46,6 +47,7 @@ public class HousemateSearchingAdvertService {
         housemateSearchingAdvert.setOnSite(body.isOnSite());
         housemateSearchingAdvert.setLivingPeopleCount(body.getLivingPeopleCount());
         housemateSearchingAdvert.setUser(user);
+
         housemateSearchingAdvertRepository.save(housemateSearchingAdvert);
     }
 

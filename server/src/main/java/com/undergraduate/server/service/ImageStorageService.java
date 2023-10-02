@@ -58,7 +58,7 @@ public class ImageStorageService {
         s3.deleteObject(bucketName, key);
     }
 
-    public void deleteMultipleImages(String bucketName ,String[] keys){
+    public void deleteMultipleImages(String bucketName, String[] keys){
         DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(bucketName).withKeys(keys);
         s3.deleteObjects(delObjReq);
     }

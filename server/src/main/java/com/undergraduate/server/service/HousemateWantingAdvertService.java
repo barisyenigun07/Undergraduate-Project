@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class HousemateWantingAdvertService {
     private final HousemateWantingAdvertRepository housemateWantingAdvertRepository;
     private final UserService userService;
-
     private final UserRepository userRepository;
 
     @Autowired
@@ -36,6 +35,7 @@ public class HousemateWantingAdvertService {
     public void createHousemateWantingAdvert(HousemateWantingAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HousemateWantingAdvert housemateWantingAdvert = new HousemateWantingAdvert();
+
         housemateWantingAdvert.setTitle(body.getTitle());
         housemateWantingAdvert.setDetail(body.getDetail());
         housemateWantingAdvert.setSmoking(body.isSmoking());
@@ -43,6 +43,7 @@ public class HousemateWantingAdvertService {
         housemateWantingAdvert.setGender(body.getGender());
         housemateWantingAdvert.setMaxFeeMonthly(body.getMaxFeeMonthly());
         housemateWantingAdvert.setUser(user);
+
         housemateWantingAdvertRepository.save(housemateWantingAdvert);
     }
 
@@ -71,6 +72,7 @@ public class HousemateWantingAdvertService {
     public void updateHousemateWantingAdvert(Long id, HousemateWantingAdvertRequest body){
         User user = userService.getAuthenticatedUser().orElseThrow(() -> new ResourceNotFoundException(ResourceType.USER));
         HousemateWantingAdvert housemateWantingAdvert = housemateWantingAdvertRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ResourceType.ADVERT));
+
         if (!housemateWantingAdvert.getUser().equals(user)){
             throw new UnauthorizedException();
         }

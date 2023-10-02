@@ -9,4 +9,5 @@ import lombok.ToString;
 @Builder
 public class AuthResponse {
     private String token;
+    private UserResponse user;
 }

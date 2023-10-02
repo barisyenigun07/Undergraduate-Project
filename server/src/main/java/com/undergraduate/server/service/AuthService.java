@@ -7,6 +7,7 @@ import com.undergraduate.server.model.request.ChangePasswordRequest;
 import com.undergraduate.server.model.request.LoginRequest;
 import com.undergraduate.server.model.request.RegisterRequest;
 import com.undergraduate.server.model.response.AuthResponse;
+import com.undergraduate.server.model.response.UserResponse;
 import com.undergraduate.server.repository.RoleRepository;
 import com.undergraduate.server.repository.UserRepository;
 import com.undergraduate.server.security.JwtUserDetailsService;
@@ -83,8 +84,10 @@ public class AuthService {
         }
         final UserDetails userDetails = userDetailsService.loadUserByUsername(body.getUsername());
         final String jwtToken = jwtUtil.createToken(userDetails);
+
         return AuthResponse.builder()
                 .token(jwtToken)
+                .user(UserResponse.fromEntity(optionalUser.get()))
                 .build();
     }
 

@@ -19,7 +19,7 @@ public class BelongingsAdvertController {
     }
 
     @PostMapping("/belongings-advert")
-    public void createBelongingsAdvertController(@ModelAttribute BelongingsAdvertRequest body){
+    public void createBelongingsAdvert(@ModelAttribute BelongingsAdvertRequest body){
         belongingsAdvertService.createBelongingsAdvert(body);
     }
 

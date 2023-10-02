@@ -30,7 +30,6 @@ public class HouseAdvertService {
     private final HouseAdvertRepository houseAdvertRepository;
     private final ImageStorageService imageStorageService;
     private final UserService userService;
-
     private final UserRepository userRepository;
 
     @Autowired
