@@ -1,13 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { login, register } from "../api/auth.api";
-import Cookies from "js-cookie";
 
 export const registerUser = createAsyncThunk(
     'auth/register',
     async (data, thunkAPI) => {
         try {
-            const response = await register(data);
-            return response;
+            await register(data);
         }
         catch (err) {
             return thunkAPI.rejectWithValue();
@@ -20,7 +18,7 @@ export const userLogin = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             const response = await login(data);
-            Cookies.set("token", response.token);
+            localStorage.setItem("token", response.token);
             return response;
         }
         catch (err) {

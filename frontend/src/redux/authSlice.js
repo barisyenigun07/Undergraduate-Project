@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getToken } from "../util/getToken";
 import { registerUser, userLogin } from "./authActions";
-import Cookies from "js-cookie";
 
 const token = getToken() ? getToken() : null;
 
@@ -12,11 +11,11 @@ const authSlice = createSlice({
         registerSuccess: false,
         isLoggedIn: false,
         loading: false,
-        authUser: null
+        authUser: null,
     },
     reducers: {
         logout: (state) => {
-            Cookies.remove("token");
+            localStorage.removeItem("token");
             state.isLoggedIn = false;
             state.authUser = null;
             state.loading = false;

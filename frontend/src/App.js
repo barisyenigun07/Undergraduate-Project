@@ -13,6 +13,7 @@ import HousemateSearchingAdvertDetail from "./pages/AdvertDetail/HousemateSearch
 import HousemateWantingAdvertDetail from "./pages/AdvertDetail/HousemateWantingAdvertDetail";
 import BelongingsAdvertForm from './pages/AdvertForm/BelongingsAdvertForm'
 import HouseAdvertForm from "./pages/AdvertForm/HouseAdvertForm";
+import StudentForm from "./pages/AdvertForm/StudentForm";
 
 function App() {
   return (
@@ -24,11 +25,12 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/belongings-advert-form" element={<BelongingsAdvertForm/>}/>
           <Route path="/house-advert-form" element={<HouseAdvertForm/>}/>
+          <Route path="/student-advert-form" element={<StudentForm/>}/>
           <Route path="/belongings-advert/:id" element={<BelongingsAdvertDetail/>}/>
           <Route path="/house-advert/:id" element={<HouseAdvertDetail/>}/>
           <Route path="/housemate-searching-advert/:id" element={<HousemateSearchingAdvertDetail/>}/>
           <Route path="/housemate-wanting-advert/:id" element={<HousemateWantingAdvertDetail/>}/>
-          <Route path="/user/:userId" element={<UserProfile/>}/>
+          <Route path="/user/:id" element={<UserProfile/>}/>
         </Routes>
       </BrowserRouter>
     

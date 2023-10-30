@@ -254,7 +254,7 @@ const Register = () => {
                   Login
                 </Button>
               </Box>
-              <Link href="/home">Üye Olmadan Devam Et</Link>
+              <Link href="/">Üye Olmadan Devam Et</Link>
             </Stack>
           </Box>
         </Grid>

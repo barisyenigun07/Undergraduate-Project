@@ -37,6 +37,8 @@
   }
 }
 
+
+
 .landing {
   background-image: url("bg-logo.jpg");
   width: 100%;
@@ -46,17 +48,9 @@
 }
 
 .backgroundMain{
-  background-image: url("bg-logo.jpg");
-    /* Full height */
-
-    /* Center and scale the image nicely */
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url("bg-logo.jpg");
+    width: 100vw;
     background-size: cover;
     background-repeat: no-repeat;
     height: 100vh;
-}
-
-.formRegister{
-  
 }

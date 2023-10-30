@@ -32,20 +32,20 @@ import Footer from "../../components/Footer/Footer";
 
 const advertType = [
   {
-    value: "satilikEv",
-    label: "Satılık Ev",
+    value: "Ev İlanı",
+    label: "Ev İlanı",
   },
   {
-    value: "kiralikEv",
-    label: "Kiralık Ev",
+    value: "Ev Arkadaşı Arama",
+    label: "Ev Arkadaşı Arama İlanı",
   },
   {
-    value: "satilikEsya",
-    label: "satilikEsya",
+    value: "Eşya İlanı",
+    label: "Eşya İlanı",
   },
   {
-    value: "evArkadasIlan",
-    label: "Ev Arkadasi İlanları",
+    value: "Ev Arkadaşı Olma İlanı",
+    label: "Ev Arkadaşı Olma İlanı",
   },
 ];
 function HomePage() {
@@ -135,8 +135,8 @@ function HomePage() {
             variant="h1"
             component="h2"
           >
-            Find Your House/Housemate/Stuff <br />
-            What You Need
+            Ev/Ev Arkadaşı/Eşya <br/>
+            Aramak İstediğinizi Bulun
           </Typography>
           
           <Box
@@ -153,7 +153,7 @@ function HomePage() {
           >
             <TextField
               id="outlined-basic"
-              label="Enter Keyword"
+              label="Anahtar Kelime"
               variant="outlined"
               sx={{ mr: 2 }}
             />
@@ -163,7 +163,6 @@ function HomePage() {
               select
               label="Select"
               defaultValue="satilikEv"
-              helperText="Please select your currency"
               sx={{ mr: 2 }}
             >
               {advertType.map((option) => (

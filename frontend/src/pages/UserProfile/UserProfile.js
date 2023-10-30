@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, Paper, Container, Stack, Typography, Tabs, AppBar, Tab } from '@mui/material'
+import { Avatar, Box, Divider, Stack, Typography, Tabs, Tab } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getUser } from '../../api/user.api';
@@ -17,9 +17,9 @@ import AppBar3 from '../../components/AppBar3';
 
 const UserProfile = () => {
 
-  const { userId } = useParams();
+  const { id } = useParams();
 
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({id: 0, name: "", username: "", email: "", profilePhotoUrl: ""});
   const [houseAdverts, setHouseAdverts] = useState([]);
   const [housemateSearchingAdverts, setHousemateSearchingAdverts] = useState([]);
   const [housemateWantingAdverts, setHousemateWantingAdverts] = useState([]);
@@ -38,7 +38,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const userDetails = await getUser(userId);
+        const userDetails = await getUser(id);
         setUser(userDetails);
       }
       catch (err) {
@@ -49,7 +49,7 @@ const UserProfile = () => {
     const getHouseAdverts = async () => {
       if (user && user?.role?.name === "HOUSE_OWNER") {
         try {
-          const houseAds = await getHouseAdvertsByUser(user.id);
+          const houseAds = await getHouseAdvertsByUser(user?.id);
           setHouseAdverts(houseAds);
         }
         catch (err) {
@@ -61,7 +61,7 @@ const UserProfile = () => {
     const getHousemateSearchingAdverts = async () => {
       if (user && user.role?.name === "STUDENT") {
         try {
-          const housemateSearchingAds = await getHousemateSearchingAdvertsByUser(user.id);
+          const housemateSearchingAds = await getHousemateSearchingAdvertsByUser(user?.id);
           setHousemateSearchingAdverts(housemateSearchingAds);
         } catch (error) {
           
@@ -72,7 +72,7 @@ const UserProfile = () => {
     const getHousemateWantingAdverts = async () => {
       if (user && user.role?.name === "STUDENT") {
         try {
-          const housemateWantingAds = await getHousemateWantingAdvertsByUser(user.id);
+          const housemateWantingAds = await getHousemateWantingAdvertsByUser(user?.id);
           setHousemateWantingAdverts(housemateWantingAds);
         } catch (error) {
           
@@ -97,7 +97,7 @@ const UserProfile = () => {
     getBelongingsAdverts();
     getHousemateSearchingAdverts();
     getHousemateWantingAdverts();
-  }, []);
+  }, [user, id]);
 
 
 
@@ -111,11 +111,11 @@ const UserProfile = () => {
             justifyContent: "center"
             }}
         >
-          {user && user?.profilePhotoUrl == null ? <Avatar sx={{width: 70, height: 70, mt: 2}}>{user?.username[0]}</Avatar> : <Avatar src={`http://localhost:8080/user/${user?.id}/image/download`} alt={`${user?.username}`} sx={{width: 70, height: 70, mt: 2}}/>}
+          {user?.profilePhotoUrl == null ? <Avatar sx={{width: 70, height: 70, mt: 2}}>{user?.username[0]}</Avatar> : <Avatar src={`http://localhost:8080/user/${user?.id}/image/download`} alt={`${user?.username}`} sx={{width: 70, height: 70, mt: 2}}/>}
         </Box>
         <Box mt={3} textAlign={"center"}>
           <Typography variant='h4' color={"white"}>{user?.name} - @{user?.username}</Typography>
-          {user?.role?.name === "HOUSE_OWNER" ? <Typography variant='h6' color={"white"}>House Owner</Typography> : <Typography variant='h6' color={"white"}>Student</Typography>}
+          {user?.role?.name === "HOUSE_OWNER" ? <Typography variant='h6' color={"white"}>Ev Sahibi</Typography> : <Typography variant='h6' color={"white"}>Öğrenci</Typography>}
           <Typography variant='h6' color={"white"}> <Email/> {user?.email} {"\t\t\t"} <Phone/> {user?.contactInfo} </Typography>
         </Box>
       </Box>
@@ -127,25 +127,25 @@ const UserProfile = () => {
                 
               </Typography>
               <Divider></Divider>
-              <Stack direction={"row"} spacing={2} m={3}>
+              <Stack sx={{display: "flex", justifyContent: "center"}} mt={2} ml={2} spacing={2}>
                 {houseAdverts.map(houseAdvert => <HouseAdvertCard item={houseAdvert}/>)}
               </Stack>
             </Box>
             :
             <Box>
               <Tabs variant='contained' value={value} onChange={handleTabs} centered>
-                <Tab label="Belongings Adverts"/>
-                <Tab label="Housemate Searching Advert"/>
-                <Tab label="Wanting To Be Housemate Advert"/>
+                <Tab label="Eşya İlanları"/>
+                <Tab label="Ev Arkadaşı Arama İlanları"/>
+                <Tab label="Ev Arkadaşı Olma İlanları"/>
               </Tabs>
               <TabPanel value={value} index={0}>
-                {(belongingsAdverts.length === 0) ? <Typography>No Belongings Advert Found</Typography> : belongingsAdverts.map(belongingsAdvert => <BelongingsAdvertCard item={belongingsAdvert}/>)}
+                {(belongingsAdverts.length === 0) ? <Typography>Eşya ilanı bulunamadı</Typography> : belongingsAdverts.map(belongingsAdvert => <BelongingsAdvertCard item={belongingsAdvert}/>)}
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {(housemateSearchingAdverts.length === 0) ? <Typography>No Housemate Searching Advert Found</Typography> : housemateSearchingAdverts.map(housemateSearchingAdvert => <HousemateSearchingAdvertCard item={housemateSearchingAdvert}/>)}
+                {(housemateSearchingAdverts.length === 0) ? <Typography>Ev arkadaşı arama ilanı bulunamadı</Typography> : housemateSearchingAdverts.map(housemateSearchingAdvert => <HousemateSearchingAdvertCard item={housemateSearchingAdvert}/>)}
               </TabPanel>
               <TabPanel value={value} index={2}>
-                {(housemateWantingAdverts.length === 0) ? <Typography>No Wanting To Be Housemate Advert Found</Typography> : housemateWantingAdverts.map(housemateWantingAdvert => <HousemateWantingAdvertCard item={housemateWantingAdvert}/>)}
+                {(housemateWantingAdverts.length === 0) ? <Typography>Ev arkadaşı olma ilanı bulunamadı</Typography> : housemateWantingAdverts.map(housemateWantingAdvert => <HousemateWantingAdvertCard item={housemateWantingAdvert}/>)}
               </TabPanel>
             </Box>
           }

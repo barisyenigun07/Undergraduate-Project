@@ -1,74 +1,111 @@
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { createHousemateWantingAdvert } from '../../api/housemateWantingAdvert.api';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, FormControlLabel, FormLabel, Radio, RadioGroup, Stack, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const HousemateWantingAdvertForm = () => {
-  const formik = useFormik({
-    initialValues: {
-        title: "",
-        detail: "",
-        maxFeeMonthly: 0.0,
-        gender: "",
-        isSmoking: false,
-        hasPet: false
-    },
+    const navigate = useNavigate();
 
-    onSubmit: async (values) => {
+    const [title, setTitle] = useState("");
+    const [detail, setDetail] = useState("");
+    const [maxFeeMonthly, setMaxFeeMonthly] = useState(0.0);
+    const [gender, setGender] = useState("Male");
+    const [isSmoking, setIsSmoking] = useState(false);
+    const [hasPet, setHasPet] = useState(false);
+
+    const handleSubmit = async () => {
+        const data = {
+            title: title,
+            detail: detail,
+            maxFeeMonthly: maxFeeMonthly,
+            gender: gender,
+            isSmoking: isSmoking,
+            hasPet: hasPet
+        };
+
         try {
-            await createHousemateWantingAdvert(values);
-        } catch (error) {
-            console.log(error);
+            await createHousemateWantingAdvert(data);
+            navigate("/");
+        }
+        catch (err) {
+
         }
     }
-  })
+
   return (
     <div>
-        <form onSubmit={formik.handleSubmit}>
-            <TextField
-                id='title'
-                name='title'
-                type='text'
-                value={formik.values.title}
-                onChange={formik.handleChange}
-            />
-            <TextField
-                id='detail'
-                name='detail'
-                type='text'
-                value={formik.values.detail}
-                onChange={formik.handleChange}
-            />
-            <TextField
-                id='maxFeeMonthly'
-                name='maxFeeMonthly'
-                type={"number"}
-                value={formik.values.maxFeeMonthly}
-                onChange={formik.handleChange}
-            />
-            <TextField
-                id='gender'
-                name='gender'
-                type='text'
-                value={formik.values.gender}
-                onChange={formik.handleChange}
-            />
-            <TextField
-                id='isSmoking'
-                name='isSmoking'
-                type="text"
-                value={formik.values.isSmoking}
-                onChange={formik.handleChange}
-            />
-            <TextField
-                id='hasPet'
-                name='hasPet'
-                type='text'
-                value={formik.values.hasPet}
-                onChange={formik.handleChange}
-            />
-            <Button type='submit' color='error'>Publish</Button>
+        <form onSubmit={handleSubmit}>
+            <Stack spacing={2}>
+                <Box sx={{boxShadow: 5, padding: "10px"}}>
+                    <Stack spacing={2}>
+                        <TextField
+                            id='title'
+                            name='title'
+                            label="Title"
+                            type='text'
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <TextField
+                            id='detail'
+                            name='detail'
+                            label="Detail"
+                            type='text'
+                            value={detail}
+                            multiline
+                            onChange={(e) => setDetail(e.target.value)}
+                        />
+                    </Stack>
+                </Box>
+                <Box sx={{boxShadow: 5, padding: "10px"}}>
+                    <Stack spacing={2}>
+                        <TextField
+                            id='maxFeeMonthly'
+                            name='maxFeeMonthly'
+                            label="Max Fee Monthly"
+                            type={"number"}
+                            value={maxFeeMonthly}
+                            onChange={(e) => setMaxFeeMonthly(e.target.value)}
+                        />
+                        <FormLabel id='gender-radio'>Gender</FormLabel>
+                        <RadioGroup
+                            row
+                            aria-labelledby='gender-radio'
+                            name='gender-radio-button'
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}
+                        >
+                            <FormControlLabel value={"Male"} control={<Radio/>} label="Male"/>
+                            <FormControlLabel value={"Female"} control={<Radio/>} label="Female"/>
+                        </RadioGroup>
+                        <FormLabel id='is-smoking-radio'>Is Smoking</FormLabel>
+                        <RadioGroup
+                            row
+                            aria-labelledby='is-smoking-radio'
+                            name='is-smoking-radio-button'
+                            value={isSmoking}
+                            onChange={(e) => setIsSmoking(e.target.value)}
+                        >
+                            <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
+                            <FormControlLabel value={false} control={<Radio/>} label="No"/>
+                        </RadioGroup>
+                        <FormLabel id='has-pet-radio'>Has Pet</FormLabel>
+                        <RadioGroup
+                            row
+                            aria-labelledby='has-pet-radio'
+                            name='has-pet-radio-button'
+                            value={hasPet}
+                            onChange={(e) => setHasPet(e.target.value)}
+                        >
+                            <FormControlLabel value={true} control={<Radio/>} label="Yes"/>
+                            <FormControlLabel value={false} control={<Radio/>} label="No"/>
+                        </RadioGroup>
+                    </Stack>
+                </Box>
+                <Button variant='contained' type='submit' color='error'>Publish</Button>
+            </Stack>
         </form>
     </div>
   )

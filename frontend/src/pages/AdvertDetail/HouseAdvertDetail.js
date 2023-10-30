@@ -69,18 +69,18 @@ const HouseAdvertDetail = () => {
               <Box m={2} p={2} sx={{boxShadow: 12}}>
                 <Typography variant='h4'>{houseAdvert?.title}</Typography>
                 <br/> <br/>
-                <Typography variant='h6'>Detail <br/> {houseAdvert?.detail}</Typography>
+                <Typography variant='h6'>Detay <br/> {houseAdvert?.detail}</Typography>
                 <br/> <br/>
-                <Typography>Price: {houseAdvert?.price}₺</Typography>
-                <Typography>Room Count: {houseAdvert?.roomCount}</Typography>
-                <Typography>Area: {houseAdvert?.area} m²</Typography>
-                <Typography>Warming Type: {houseAdvert?.warmingType}</Typography>
-                <Typography>House Type: {houseAdvert?.houseType}</Typography>
-                <Typography>Property Type: {houseAdvert?.propertyType}</Typography>
-                <Typography>Address: {houseAdvert?.address}</Typography>
-                {houseAdvert?.hasFurniture ? <Typography>Has Furniture?: Yes</Typography> : <Typography>Has Furniture?: No</Typography>}
-                {houseAdvert?.isOnSite ? <Typography>Is On Site?: Yes</Typography> : <Typography>Is On Site?: No</Typography>}
-                <Typography>Dues: {houseAdvert?.dues}₺</Typography>
+                <Typography>Fiyat: {houseAdvert?.price}₺</Typography>
+                <Typography>Oda Sayısı: {houseAdvert?.roomCount}</Typography>
+                <Typography>Alan: {houseAdvert?.area} m²</Typography>
+                <Typography>Isınma Tipi: {houseAdvert?.warmingType}</Typography>
+                <Typography>Ev Tipi: {houseAdvert?.houseType}</Typography>
+                <Typography>Mülk Tipi: {houseAdvert?.propertyType}</Typography>
+                <Typography>Adres: {houseAdvert?.address}</Typography>
+                {houseAdvert?.hasFurniture ? <Typography>Eşyalı Mı?: Evet</Typography> : <Typography>Eşyalı Mı?: Hayır</Typography>}
+                {houseAdvert?.isOnSite ? <Typography>Site İçi Mi?: Evet</Typography> : <Typography>Site İçi Mi?: Hayır</Typography>}
+                <Typography>Aidat: {houseAdvert?.dues}₺</Typography>
               </Box>
               <Box width={350} height={350} m={2} sx={{pl: 4}}>
                 <Box sx={{boxShadow: 12, pl: 4}}>

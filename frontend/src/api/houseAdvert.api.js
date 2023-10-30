@@ -1,8 +1,6 @@
 import axios from 'axios';
-import { getToken } from '../util/getToken';
 
-
-const token = getToken();
+const token = localStorage.getItem("token") ? localStorage.getItem("token") : null;
 
 export const createHouseAdvert = async (formData) => {
     axios.post("/house-advert", formData, {headers: {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}})
